@@ -63,7 +63,31 @@ myApp.onPageInit("*", function () {
 /*---------------------------------------
  On EACH page
  ---------------------------------------*/
+ $$("#btn-logout").click(function () {
+     window.sessionStorage.clear();
+     myApp.loginScreen(".login-screen", false);
+ });
+ $$("#btn-login").click(function () {
 
+     var formLogin = myApp.formGetData('frm-login');
+     //Get Form Login
+     var chkLogin;
+     chkLogin = validateUser(formLogin.username, formLogin.password);
+
+     if(chkLogin){
+         window.sessionStorage.setItem("username", formLogin.username);  //Set user in session
+         window.sessionStorage.setItem("authorized", 1);                 //Set token auth
+         $$("#box-welcome").html("Benvenuto " + window.sessionStorage.username);
+         myApp.closeModal(".login-screen", false);
+         getUserProfile();
+         getUserAnag();
+         getUserInfo();
+         verifyUserProfile();
+     }
+     else{
+         myApp.alert("User name o password errati","Login error");
+     }
+ });
 //INDEX
 var index = myApp.onPageInit('index', function () {
 
@@ -74,36 +98,6 @@ var index = myApp.onPageInit('index', function () {
     } else {
         myApp.loginScreen(".login-screen", false);
     }
-
-
-
-    $$("#btn-logout").click(function () {
-        window.sessionStorage.clear();
-        myApp.loginScreen(".login-screen", false);
-    });
-    $$("#btn-login").click(function () {
-
-        var formLogin = myApp.formGetData('frm-login');
-        //Get Form Login
-        var chkLogin;
-        chkLogin = validateUser(formLogin.username, formLogin.password);
-
-        if(chkLogin){
-            window.sessionStorage.setItem("username", formLogin.username);  //Set user in session
-            window.sessionStorage.setItem("authorized", 1);                 //Set token auth
-            $$("#box-welcome").html("Benvenuto " + window.sessionStorage.username);
-            myApp.closeModal(".login-screen", false);
-            getUserProfile();
-            getUserAnag();
-            getUserInfo();
-            verifyUserProfile();
-        }
-        else{
-            myApp.alert("User name o password errati","Login error");
-        }
-    });
-
-
 }).trigger();
 
 //MANAGE TICKET
@@ -149,7 +143,7 @@ var manage_ticket = myApp.onPageInit('manage_ticket', function (page) {
             $$('.infinite-scroll-preloader').addClass('nodisplay');
             return;
         }
-    var cols = ["ticketid", "externalsystem", "description", "status", "reportedby", "affectedperson", "creationdate"];
+    var cols = ["ticketid", "description", "status", "reportedby", "affectedperson", "creationdate"];
     var heads = ["ID Ticket", "Descrizione", "Stato", "Aperto Da", "Assegnato A", "Data creazione"];
 
     buildTicketTable(myList.member, cols, heads, limitDoc, lastIndexDoc);
