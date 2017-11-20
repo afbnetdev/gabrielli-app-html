@@ -1,0 +1,202 @@
+/*
+   statusbar-overlay sets the background color for the overlay. Black text is the default when the statusbar plugin is not added. When the
+   statusbar plugin is added, it also adds default setting to make the content white via:
+
+       <preference name="StatusBarStyle" value="lightcontent"/>
+
+   Setting the background color to black will allow the default light content (white text/icons) to show on it. The statusbar plugin is included
+   in the config.xml file and will be added by the CLI when you build locally.
+
+   See https://github.com/apache/cordova-plugin-statusbar
+*/
+/*html,body{
+	margin: 0 auto;
+	width:420px!important;
+	max-width:420px!important;
+}
+
+body{
+	width:420px;
+}*/
+.content-block .data-table{
+	overflow: initial!important;
+}
+.statusbar-overlay {
+    background: #000000;
+}
+/*-------------------------------
+            Index
+-------------------------------*/
+#img-logo{
+    position: relative;
+    height: 56px;
+    float: left;
+}
+#box-welcome{
+    text-align: center;
+    font-size: 16px;
+}
+
+.btn-spacer{
+    margin: 5px;
+}
+.btn-logout-sidePanel{
+    margin: 20px 0px;
+
+}
+
+
+.data-table tbody td {
+    height: auto;
+    height: 70px;
+
+}
+
+.infinite-scroll-preloader {
+  margin-top:-20px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.infinite-scroll-preloader .preloader {
+  width:34px;
+  height:34px;
+}
+
+.directory, .file{
+    padding: 5px;
+    list-style-type: none;
+}
+.directory{
+
+}
+.file{
+
+}
+
+.titleDocumentPage{
+    font-size: 18px;
+    text-align: center;
+}
+.datePickerFrom, .datePickerTo, .searchForNumberFrom, .searchForNumberTo, .docContains, .docAmountFrom, .docAmountTo{
+    height: 20px;
+    margin-bottom: 20px;
+    border: none;
+    border-bottom: 1px solid;
+    border-radius: 0px !important;
+    font-size: 15px;
+    width: 100%;
+    max-width: 160px;
+}
+.iconCalendar{
+    vertical-align: middle;
+    color: #5a483e;
+    margin-top: 20px;
+    display: block;
+    text-align: left;
+}
+.datePickerContainer, .searchForNumberContainer, .filterStatus, .filterDesc{
+    padding: 0px 5px;
+    margin-bottom: 20px;
+}
+.documentSearchCount{
+    display: none;
+    margin: 1em auto;
+    text-transform: uppercase;
+}
+.docContainer .data-table{
+    width: 100%;
+}
+.tbodyDocumentList td{
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.nodisplay{
+    visibility: hidden;
+}
+.backToTop{
+       background: #ffc107!important;
+}
+.buttonsFilter{
+    margin-top: 50px;
+}
+/* Ticket file uploader */
+.fileContainer {
+    overflow: hidden;
+    position: relative;
+}
+
+.fileContainer [type=file] {
+    cursor: inherit;
+    display: block;
+    filter: alpha(opacity=0);
+    min-width: 100%;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    top: 0;
+}
+.item-content label{
+    font-size: 12px;
+}
+.valutazioneTkt input[type="radio"] {
+  display: none;
+}
+
+.valutazioneTkt label {
+  font-size:45px;
+}
+
+.valutazioneTkt label{
+  direction: rtl;
+  unicode-bidi: bidi-override;
+}
+.textAreaValutazioneTkt{
+    direction: ltr;
+}
+.valutazioneTkt label:hover,
+.valutazioneTkt label:hover ~ label {
+  color: orange;
+}
+
+.valutazioneTkt input[type="radio"]:checked ~ label {
+  color: orange;
+}
+.valutazioneTkt{
+        padding-left: 16px;
+
+}
+.btnDetailTicket{
+    margin-top: 50px;
+}
+
+.displaynone{
+    display: none;
+}
+
+.notaValutazione{
+    padding-right: 16px;
+}
+.colorWhite{
+    color:#fff !important;
+}
+
+[data-page="index"] .back.link{
+    display: none;
+}
+a.button.button-fill.button-raised.yellow{
+    background-color: #ffc107!important;
+    color: #fff;
+    font-size: 17px;
+}
+.button{
+	/*max-width: 50%;*/
+}
+
+@media (max-width: 480px) and (orientation: portrait) {
+    .tbodyDocumentList td{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+}

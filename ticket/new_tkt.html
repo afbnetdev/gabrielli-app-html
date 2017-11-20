@@ -1,0 +1,66 @@
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="left"><a href="#" class="back link"><i class="icon f7-icons">chevron_left</i></a></div>
+        <div class="center"><div class="item-media"><img id="img-logo" src="/public/img/logo.jpg" /></div></div>
+        <div class="right"><a href="#" class="link icon-only open-panel"><i class="icon icon-bars"></i></a></div>
+    </div>
+</div>
+<div class="pages">
+    <div data-page="new_tkt" class="page navbar-through">
+        <div class="page-content">
+            <div class="content-block">
+                <form id="frm-new-ticket" class="list-block" method="post" enctype="multipart/form-data">
+                    <ul>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label">Titolo</div>
+                                    <div class="item-input">
+                                        <input type="text" name="title" id="title" placeholder="Titolo"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label">Dettagli</div>
+                                    <div class="item-input">
+                                        <input type="text" name="dettagli" id="dettagli" placeholder="Inserisci i dettagli..."/>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label">Allegato</div>
+                                    <i class="icon f7-icons color-red" id="btn-attachment-upload">folder</i>
+                                    <label class="fileContainer">
+                                        <span id="file-label">Seleziona un file</span>
+                                        <input type="file" name="file-to-upload" id="file-to-upload"/>
+                                    </label>
+                                    <br /><br />
+                                    <i class="icon f7-icons color-brown btn-camera-upload" id="btn-camera-upload">camera</i>
+                                    <label for="btn-camera-upload" class="btn-camera-upload">Allega una foto</label>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-media"><img id="small-image" style="width: 60px" class="camera-upload-thumb" src="" /></div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+                <div class="row">
+                    <a href="#" id="btn-new-ticket" class="button button-fill button-big button-raised color-amber col-50">Conferma</a>
+                    <a href="#" class="back button button-fill button-big button-raised color-red col-50 icon f7-icons">reply_fill</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
