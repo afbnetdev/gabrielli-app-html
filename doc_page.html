@@ -2,11 +2,11 @@
 <div class="pages">
     <div data-page="doc_page" class="page">
         <a href="#" class="floating-button backToTop nodisplay"><i class="f7-icons">arrow_up</i></a>
-        <div class="page-content infinite-scroll" data-distance="1000">
-            <div class="content-block">
+        <div class="page-content infinite-scroll row" data-distance="1000">
+            <div class="content-block col-50 center-content">
                 <div class="center"><h2 class="titleDocumentPage "></h2></div>
-                <input type="hidden" value="" name="hiddenInputId" class="hiddenInputId" /> 
-                
+                <input type="hidden" value="" name="hiddenInputId" class="hiddenInputId" />
+
                 <div class="datePickerContainer row">
                     <div class="col-30">
                         <span>DATA</span>
@@ -17,7 +17,7 @@
                         <input type="text" value="" placeholder="Al" class="datePickerTo" />
                     </div>
                 </div>
-                
+
                 <div class="searchForNumberContainer row">
                      <div class="col-30">
                          <span>NUMERO</span>
@@ -39,12 +39,12 @@
                         <input type="tel"  value="" placeholder="A" class="docAmountTo onlyNumber" />
                     </div>
                 </div>
-                
+
                 <p><a class="button button-fill button-big button-raised color-amber btn-spacer submitDocForm" href="#" >RICERCA</a></p>
             </div>
-            <div class="docContainer row">
-                <p class="documentSearchCount">Documenti trovati: <span class="docCount"></span></p>
-                <div class="data-table data-table-collapsible data-table-init" >
+            <div class="docContainer row col-100">
+                <p class="documentSearchCount center-content">Documenti trovati: <span class="docCount"></span></p>
+                <div class="data-table data-table-collapsible data-table-init center-content">
                     <table>
                         <thead></thead>
                         <tbody class="tbodyDocumentList"></tbody>
@@ -56,7 +56,6 @@
                 <div class="preloader"></div>
             </div>
         </div>
-    
+
     </div>
 </div>
-
