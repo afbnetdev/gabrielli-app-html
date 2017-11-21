@@ -29,7 +29,7 @@ var itemsPerLoad = 10;
 var lastIndexDoc = 0;
 var limitDoc = 10;
 var docTableData;
-
+var userAndPwdCheck = true;
 
 
 var months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
@@ -85,6 +85,9 @@ myApp.onPageInit("*", function () {
          verifyUserProfile();
      }
      else{
+          if(!userAndPwdCheck){
+                return;
+            }
          myApp.alert("User name o password errati","Login error");
      }
  });
