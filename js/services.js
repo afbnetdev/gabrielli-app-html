@@ -1,7 +1,7 @@
 
 //Causa problemi se inserito in util
 
-
+//Services
 
 function getMaximoTktList(stringFilter){
     var err;
@@ -108,7 +108,7 @@ function getUserInfo(){
                         myApp.hidePreloader();
                     },
                     success: function (data, status, xhr) {
-                        window.sessionStorage.setItem("userEmail", data.email);
+                        window.sessionStorage.setItem("userEmail", data.info.email);
                          
                     },
 
@@ -124,11 +124,13 @@ function getUserInfo(){
 }
 function validateUser(uuid,upwd){
     var chkLogin = false;
+    
     if(!uuid || !upwd){
         myApp.alert("Inserire username e password","Login errato");
         userAndPwdCheck = false;
         return;
     }
+
     $$.ajax({
         headers: {
 //            'Authorization': 'Bearer 102-token',
@@ -210,12 +212,17 @@ function getUserProfile(){
 }
 
 // funzione reperimento documenti
-function getDocumentList(docAmountFrom,docAmountTo,dateFrom,dateTo,docContains){
+function getDocumentList(docAmountFrom,docAmountTo,dateFrom,dateTo,docContains,docType){
     
         if(window.sessionStorage.jsessionid === ''){
             myApp.hidePreloader();
             getLogout();
         }else{
+            if(docType){
+                var docTypeToFilter = 'op=contain,value='+docType+'';
+            }else{
+                var docTypeToFilter = '';
+            }
             //sostituire il codice fiscale con +window.sessionStorage.codicefiscale
             $$.ajax({
                 headers: {
@@ -224,7 +231,7 @@ function getDocumentList(docAmountFrom,docAmountTo,dateFrom,dateTo,docContains){
                     'Content-type': 'application/x-www-form-urlencoded',
                     'jSessionID': window.sessionStorage.jsessionid,
                     'DocFilterDataDocumento':'op=between,from='+dateFrom+',to='+dateTo,
-        //            'DocFilterTipoDocumento':'op=contain,value='+docType,
+                    'DocFilterTipoDocumento': docTypeToFilter,
                     // 'DocFilterCodiceFiscale':'op=equal,value=01654010345',
                     'DocFilterCodiceFiscale':'op=equal,value='+window.sessionStorage.codicefiscale,
                     'DocFilterImporto':'op=between,from='+docAmountFrom+',to='+docAmountTo,
@@ -261,10 +268,8 @@ function getDocumentList(docAmountFrom,docAmountTo,dateFrom,dateTo,docContains){
                     401: function (xhr) {
                         myApp.alert('App non autorizzata ad ottenere i dati', 'docListError');
                          getLogout();
-                    },
-                    500: function(xhr){
-                        getLogout();
                     }
+                  
                 }
             });
                 return docTableData;
