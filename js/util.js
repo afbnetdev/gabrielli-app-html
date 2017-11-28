@@ -3,8 +3,10 @@
 Initial setup
  ---------------------------------------*/
 
-var URL_ENDPOINT = 'http://portal.gabriellispa.it';
-//var URL_ENDPOINT = 'http://192.168.2.90:9080';
+//var URL_ENDPOINT = 'http://portal.gabriellispa.it';
+var URL_ENDPOINT = 'http://192.168.2.90:9080';
+// INDIRIZZO DEL CLIENTE DA MODIFICARE CON IP PUBBLICO
+//var URL_ENDPOINT = 'http://192.168.7.52:10039';
 
 //FILTER STRING
 var pageSizeFilterTickets=20;
