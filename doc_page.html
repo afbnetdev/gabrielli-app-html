@@ -2,22 +2,26 @@
 <div class="pages">
     <div data-page="doc_page" class="page">
         <a href="#" class="floating-button backToTop nodisplay"><i class="f7-icons">arrow_up</i></a>
-        <div class="page-content infinite-scroll row" data-distance="1000">
-            <div class="content-block col-50 center-content">
+        <div class="page-content infinite-scroll" data-distance="1000">
+            <div class="content-block">
                 <div class="center"><h2 class="titleDocumentPage "></h2></div>
-                <input type="hidden" value="" name="hiddenInputId" class="hiddenInputId" />
-
+                <input type="hidden" value="" name="hiddenInputId" class="hiddenInputId" /> 
+                
                 <div class="datePickerContainer row">
                     <div class="col-30">
                         <span>DATA</span>
                         <i class="f7-icons iconCalendar">calendar</i>
                     </div>
                     <div class="col-70">
+                        <div>
                         <input type="text" value="" placeholder="Dal" class="datePickerFrom" />
+                        </div>
+                        <div>
                         <input type="text" value="" placeholder="Al" class="datePickerTo" />
+                        </div>
                     </div>
                 </div>
-
+                
                 <div class="searchForNumberContainer row">
                      <div class="col-30">
                          <span>NUMERO</span>
@@ -34,16 +38,20 @@
                          <span>IMPORTO </span>
                         <i class="f7-icons iconCalendar">money_euro</i>
                     </div>
-<div class="col-70 containerAmount">
+                   <div class="col-70 containerAmount">
+                       <div class="amountContainerWithDecimal">
                         <input type="tel" value="" placeholder="Da" class="docAmountFrom onlyNumber">
                         <span class="amountSeparator">,</span>
                         <input type="tel" value="" placeholder="00" class="docAmountFromDecimal onlyNumber">
+                        </div>
+                        <div class="amountContainerWithDecimal">
                         <input type="tel" value="" placeholder="A" class="docAmountTo onlyNumber">
                         <span class="amountSeparator">,</span>
                         <input type="tel" value="" placeholder="00" class="docAmountToDecimal onlyNumber">
+                        </div>
                     </div>
                 </div>
-                <div class="searchForTextContainer row">
+                 <div class="searchForTextContainer row">
                      <div class="col-30">
                          <span>TIPO DOC.</span>
                         <i class="f7-icons iconCalendar">drawers</i>
@@ -52,12 +60,12 @@
                         <input type="text" value="" placeholder="Tipo Documento" class="docType" />
                     </div>
                 </div>
-
+                
                 <p><a class="button button-fill button-big button-raised color-amber btn-spacer submitDocForm" href="#" >RICERCA</a></p>
             </div>
-            <div class="docContainer row col-100">
-                <p class="documentSearchCount center-content">Documenti trovati: <span class="docCount"></span></p>
-                <div class="data-table data-table-collapsible data-table-init center-content">
+            <div class="docContainer row">
+                <p class="documentSearchCount">Documenti trovati: <span class="docCount"></span></p>
+                <div class="data-table data-table-collapsible data-table-init" >
                     <table>
                         <thead></thead>
                         <tbody class="tbodyDocumentList"></tbody>
@@ -69,6 +77,7 @@
                 <div class="preloader"></div>
             </div>
         </div>
-
+    
     </div>
 </div>
+
