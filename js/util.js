@@ -3,8 +3,8 @@
 Initial setup
  ---------------------------------------*/
 
-//var URL_ENDPOINT = 'http://portal.gabriellispa.it';
-var URL_ENDPOINT = 'http://192.168.2.90:9080';
+var URL_ENDPOINT = 'https://portal.gabriellispa.it';
+//var URL_ENDPOINT = 'http://localhost:9080';
 // INDIRIZZO DEL CLIENTE DA MODIFICARE CON IP PUBBLICO
 //var URL_ENDPOINT = 'http://192.168.7.52:10039';
 
@@ -193,11 +193,11 @@ function buildTicketTable(myList, columns, headers, limit, lastIndexDoc) {
         url = "ticket/ticketPage.html?id=" + myList[i].ticketid;
         row$.append($$('<td data-collapsible-title="' + headers[0] + '"/>').html('<a href="'+ url +'" class="button button-fill button-raised yellow">' + myList[i].ticketid + '</a>'));
 //        row$.append($$('<td data-collapsible-title="' + headers[1] + '"/>').html('<a href="'+ url +'" class="doc-info_title">' + myList[i].externalsystem + '</a>'));
-        row$.append($$('<td data-collapsible-title="' + headers[2] + '"/>').html('<a href="'+ url +'" class="doc-info_title">' + desc + '</a>'));
-        row$.append($$('<td data-collapsible-title="' + headers[3] + '"/>').html('<a href="'+ url +'" class="doc-info_title">' + myList[i].status + '</a>'));
-        row$.append($$('<td data-collapsible-title="' + headers[4] + '"/>').html('<a href="'+ url +'" class="doc-info_title">' + myList[i].reportedby + '</a>'));
-        row$.append($$('<td data-collapsible-title="' + headers[5] + '"/>').html('<a href="'+ url +'" class="doc-info_title">' + assignment + '</a>'));
-        row$.append($$('<td data-collapsible-title="' + headers[6] + '"/>').html('<a href="'+ url +'" class="doc-info_title">' + formatDateFromTimeStampToItalian(myList[i].creationdate) + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + headers[1] + '"/>').html('<a href="'+ url +'" class="doc-info_title">' + desc + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + headers[2] + '"/>').html('<a href="'+ url +'" class="doc-info_title">' + myList[i].status + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + headers[3] + '"/>').html('<a href="'+ url +'" class="doc-info_title">' + myList[i].reportedby + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + headers[4] + '"/>').html('<a href="'+ url +'" class="doc-info_title">' + assignment + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + headers[5] + '"/>').html('<a href="'+ url +'" class="doc-info_title">' + formatDateFromTimeStampToItalian(myList[i].creationdate) + '</a>'));
         $$(".data-table > table > tbody").append(row$);
     }
     filteredList = undefined;
@@ -233,7 +233,7 @@ function toFilterTickets(dateFrom, dateTo, status, desc){
        descIfExist  = 'and description="%'+desc+'%"';
     }
 
-    var stringFilters = 'oslc.pageSize='+pageSizeFilterTickets+'&oslc.orderBy='+orderByFilterTickets+'&oslc.select=*&oslc.where=reportedby="'+window.sessionStorage.username+'" and creationdate>="'+dateFrom+'" and creationdate<="'+dateTo+'" and status="'+status+'"'+descIfExist;
+    var stringFilters = 'oslc.pageSize='+pageSizeFilterTickets+'&oslc.orderBy='+orderByFilterTickets+'&oslc.select=*&oslc.where=reportedby="'+window.sessionStorage.personid+'" and creationdate>="'+dateFrom+'" and creationdate<="'+dateTo+'" and status="'+status+'"'+descIfExist;
     
     return stringFilters;
 }

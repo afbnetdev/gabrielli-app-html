@@ -67,6 +67,7 @@ function getUserAnag(){
                 window.sessionStorage.setItem("codcliamm", data.anag.member[0].codcliamm);
                 window.sessionStorage.setItem("codforamm", data.anag.member[0].codforamm);
                 window.sessionStorage.setItem("codicefiscale", data.anag.member[0].codicefiscale);
+                window.sessionStorage.setItem("personid", data.anag.member[0].personid);
             },
             statusCode: {
                 401: function (xhr) {
@@ -346,7 +347,7 @@ function newTicket(){
 
        tktdata.description = tkttitle;
        tktdata.description_longdescription = tktdetails;
-       tktdata.reportedby = window.sessionStorage.username;
+       tktdata.reportedby = window.sessionStorage.personid;
        tktdata.typestart = "APP";
        //call for new ticket service
        $$.ajax({
