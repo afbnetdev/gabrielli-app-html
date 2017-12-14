@@ -123,7 +123,7 @@ var manage_ticket = myApp.onPageInit('manage_ticket', function (page) {
     //var myList = getTktDataByFilter('0','10',filter, sort);
     var myList; var lastIndexDoc; var limitDoc; var maxItems;
     if(!filteredList){
-        var stringFilterOnlyUsername = 'oslc.select=*&oslc.where=reportedby="'+window.sessionStorage.personid+'"';
+        var stringFilterOnlyUsername = 'oslc.select=*&oslc.where=reportedby="'+window.sessionStorage.personid+'"&oslc.orderBy=-changedate';
         myList = getMaximoTktList(stringFilterOnlyUsername);
     // myList = getTktDataByFilter(lastIndex, itemsPerLoad, filter, sort);
 
