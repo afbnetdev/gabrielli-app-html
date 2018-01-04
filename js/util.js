@@ -148,7 +148,7 @@ function buildDocumentTable(myList, columns, limit, lastIndexDoc) {
             //var ref = cordova.InAppBrowser.open(linkPDF, '_system', 'location=yes');
           var ref = window.open(linkPDF, '_system', 'location=yes'); 
          }else{
-             myApp.alert("Impossibile reperire il Pdf")
+             myApp.alert("Impossibile reperire il Pdf", "Pdf")
          }
 
     });
@@ -302,7 +302,7 @@ function populateTicketPageDetails(ticket){
     if((ticket.val1 || ticket.val2 || ticket.cordialita) && ticket.status == 'RESOLVED'){
         $$("#btn-valuta-ticket").hide();
         $$(".valutazioneTkt").hide();
-        myApp.alert("Ticket già valutato");
+        myApp.alert("Ticket già valutato", "Ticket");
 
     }
 
