@@ -243,7 +243,7 @@ var ticketPage = myApp.onPageInit('ticketPage', function (page) {
     var stringFilter = 'oslc.select=*&oslc.where=ticketid="'+ticketId+'"';
     var ticket = getMaximoTktList(stringFilter);
     if(!ticket){
-        myApp.alert("Dettagli del ticket "+ticketId+" non disponibili");
+        myApp.alert("Dettagli del ticket "+ticketId+" non disponibili","Attenzione");
         return;
     }
     populateTicketPageDetails(ticket.member[0]);
