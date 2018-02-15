@@ -356,14 +356,17 @@ function setUserProfile(data){
     
    window.sessionStorage.setItem("userProfile", groupArray);
 }
+function isInArray(days, day) {
+    return days.indexOf(day.toLowerCase()) > -1;
+}
 function verifyUserProfile(){
-       if(!window.sessionStorage.userProfile.includes("ammin") && !window.sessionStorage.userProfile.includes("super_doc")){
+       if(!isInArray(window.sessionStorage.userProfile,"ammin") && !isInArray(window.sessionStorage.userProfile,"super_doc")){
             $$(".richiestaDocumenti").hide();
         }else{
             $$(".richiestaDocumenti").show();
         }
 
-        if(!window.sessionStorage.userProfile.includes("ticket")){
+        if(!isInArray(window.sessionStorage.userProfile,"ticket")){
             $$(".gestioneTicket").hide();
         }else{
             $$(".gestioneTicket").show();
