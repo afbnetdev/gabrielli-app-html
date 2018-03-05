@@ -185,7 +185,11 @@ var manage_ticket = myApp.onPageInit('manage_ticket', function (page) {
             lastIndexDoc = lastIndexDoc + limitDoc;
         }, 500);
     });
-
+ $$('.refresh-btn').click(function(){
+        mainView.router.reloadPage("manage_ticket.html");
+        $$('.refresh-btn i').css('transition-duration', '.3s');
+        $$('.refresh-btn i').css('transform', 'rotate(360deg)');
+    });
 });
 
 //NEW TICKET
