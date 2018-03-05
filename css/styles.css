@@ -217,7 +217,127 @@ a.button.button-fill.button-raised.yellow{
 .searchForTextContainer{
     margin-bottom: 30px;
 }
+.info.row, .puntiVenditaIspezione.row, .presentiIspezione.row, .commentiIspezione, .tipoIspezione{
+    margin-bottom: 40PX;
+}
+.nuovaIspezioneh3{
+    text-align: center;
+    margin-bottom: 30px;
+}
 
+.bold{
+    font-weight: bold;
+}
+.list-block.virtual-list.ispezioneList .item-subtitle{
+    background-color: #5a483e;
+    padding: 5px 5px;
+    color:#fff;
+    font-size:12px;
+    margin: 10px 0px;
+}
+.ispezioneList.list-block .item-title{
+    white-space: normal;
+}
+.ispezioneList select, .storicoIspezioni select{
+    -webkit-appearance: menulist;
+    -moz-appearance: menulist;
+    -ms-appearance: menulist;
+    appearance: menulist;
+}
+.smart-select{
+    -webkit-appearance: menulist !Important;
+    -moz-appearance: menulist !Important;
+    -ms-appearance: menulist !Important;
+    appearance: menulist !Important;
+    display: inline-block;
+    width: 165px;
+    border-bottom: 1px solid;
+    padding: 2px;
+    color: #000 !Important;
+}
+.storicoIspezioni .datePickerContainer, .storicoIspezioni .searchForNumberContainer, .storicoIspezioni .filterStatus, .storicoIspezioni .filterDesc{
+    padding: 0px;
+}
+a.button.button-fill.button-big.button-raised.color-amber.btn-spacer.submitRicercaIspezioni, a.button.button-fill.button-big.button-raised.color-amber.btn-spacer.submitIspezioneHeader {
+    margin-top: 50px;
+}
+a.button.button-fill.button-big.button-raised.color-amber.btn-spacer.submitRicercaIspezioni {
+    margin-bottom: 50px;
+}
+
+.displayblock{
+    display: block;
+}
+
+.virtual-list.list-block .item-content{
+    border-bottom: 1px solid rgba(0,0,0,.1) !Important;
+}
+.virtual-list.list-block ul:after{
+    position: relative !Important;
+}
+.ispezioniContainer.row{
+    margin-top: 50px;
+    
+}
+.item-link.smart-select{
+        padding: 10px;
+}
+select{
+    padding: 10px;
+}
+textArea{
+    padding: 10px;
+}
+
+input.modal-text-input{
+    border-bottom:1px solid ;
+}
+
+.sposta{
+    position: absolute !Important;
+    right: 3000px !Important;
+}
+.small-imageMulti{
+    display: block;
+    margin: 10px 0px;
+    width: 60px;
+}
+.row.imgContent{
+    width: 100px;
+}
+.customDelete {
+    position: relative;
+    top: 4px;
+    left: 20px;
+}
+.customDeleteImg {
+    position: relative;
+    top: 14px;
+}
+.filterStatusSelect{
+    background: none !important;
+}
+
+div.ispezioneList .item-subtitle{
+    white-space:normal;
+}
+
+.ispezioneList select{
+    width: 130px;
+    margin-left: 20px;
+}
+div.ispezioneList ul{
+    height: 100% !important;
+}
+.conteinerCalendar .button.close-picker{
+    display: none;
+}
+.sr-notaTkt{
+    display: none;
+}
+.picker-calendar.picker-modal{
+    z-index: 99998 !Important;
+}
 @media (max-width: 480px) and (orientation: portrait) {
     .tbodyDocumentList td{
         padding-top: 5px;
