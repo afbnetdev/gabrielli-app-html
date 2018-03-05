@@ -1,0 +1,81 @@
+<div class="pages">
+    <div data-page="storicoIspezioni" class="page navbar-through storicoIspezioni">
+        <div class="page-content">
+            <div class="content-block">
+                <h3 CLASS="nuovaIspezioneh3">RICERCA ISPEZIONI</h3>
+                <div class="datePickerContainer row">
+                    <div class="col-40">
+                        <span>DATA</span>
+                        <i class="f7-icons iconCalendar">calendar</i>
+                    </div>
+                    <div class="col-60">
+                        <input type="text" value="" placeholder="Dal" class="datePickerFrom displayblock" />
+                        <input type="text" value="" placeholder="Al" class="datePickerTo" />
+                    </div>
+                </div>
+                 <div class="puntiVenditaIspezione row">
+                    <div class="col-40">
+                         <span>Punto vendita</span>
+                         <i class="f7-icons iconCalendar">home</i>
+                    </div>
+                    <div class="col-60">
+                            <a href = "#" data-searchbar = "true" data-searchbar-placeholder = "Ricerca Punti Vendita" class = "item-link smart-select">
+                            <select name="books" class="puntiVenditaIspezioneSelect">
+                                <option value="">Tutti i punti vendita</option>
+                            </select>
+                             <div class = "item-content">
+                                    <div class = "item-inner">
+                                       <div class = "item-title"></div>
+                                    </div>
+                                 </div>
+                         </a>
+                    </div>
+                 </div>
+                  <div class="filterStatus row">
+                     <div class="col-40">
+                         <span>STATUS</span>
+                        <i class="f7-icons iconCalendar">ticket</i>
+                    </div>
+                    <div class="col-60">
+                            <select class="filterStatusSelect">
+                                <option value="" >Tutti gli stati</option>
+                                <option value="B">Salvata</option>
+                                <option value="I">Inviata</option>
+                            </select>
+                    </div>
+                </div>
+                    <div class="tipoIspezione row">
+                    <div class="col-40">
+                         <span>Tipo evento</span>
+                         <i class="f7-icons iconCalendar">data</i>
+                    </div>
+                    <div class="col-60">
+                            <div class="col-60">
+                        <a href = "#" data-searchbar = "true" data-searchbar-placeholder = "Ricerca Eventi" class = "item-link smart-select">
+                            <select class="tipoIspezioneSelect">
+                                <option value="">Tutti i tipi evento</option>
+                            </select>
+                            <div class = "item-content">
+                                    <div class = "item-inner">
+                                       <div class = "item-title"></div>
+                                    </div>
+                                 </div>
+                        </a>
+                    </div>
+                    </div>
+                 </div>
+                
+                     <p><a class="button button-fill button-big button-raised color-amber btn-spacer submitRicercaIspezioni" href="#" >Ricerca</a></p>
+                 <div class="ispezioniContainer row">
+<!--                <p class="ispezioniSearchCount">Ispezioni trovate: <span class="ispezioniCountSpan"></span></p>-->
+                <div class="data-table data-table-collapsible data-table-init" >
+                    <table>
+                        <thead></thead>
+                        <tbody class="tbodyIspezioniList"></tbody>
+                    </table>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
