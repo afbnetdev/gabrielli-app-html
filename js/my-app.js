@@ -2,7 +2,9 @@
 var myApp = new Framework7({
     template7Pages: true,
     material: true,
+    smartSelectSearchbar:true,
     uniqueHistory : true,
+    smartSelectBackOnSelect:true,
     preroute: function (view, options) {
         if (!window.sessionStorage.jsessionid) {
             getLogout();
@@ -30,10 +32,8 @@ var lastIndexDoc = 0;
 var limitDoc = 10;
 var docTableData;
 var userAndPwdCheck = true;
+var testPathCustom;
 
-
-var months = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
-var days = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
 
 $$.ajaxSetup({headers: {'Access-Control-Allow-Origin': '*'}});
 var mainView = myApp.addView('.view-main', {dynamicNavbar: true, });
@@ -41,11 +41,12 @@ var mainView = myApp.addView('.view-main', {dynamicNavbar: true, });
 $$(document).on('deviceready', function () {
     pictureSource = navigator.camera.PictureSourceType;
     destinationType = navigator.camera.DestinationType;
+    cordova.plugins.certificates.trustUnsecureCerts(true);
+    testPathCustom = cordova.file.externalApplicationStorageDirectory;
     //Necessarie per navigare il file system
 //    myPath = cordova.file.externalRootDirectory;
 //    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, fail);
 });
-
 /*---------------------------------------
  On ALL pages
  ---------------------------------------*/
@@ -360,6 +361,134 @@ var doc_page = myApp.onPageInit('doc_page', function (page) {
 
 
 });
+// ISPEZIONE
+var nuova_ispezione = myApp.onPageInit("nuova_ispezione", function (page) {
+    
+   $$(".submitIspezioneHeader").removeClass("displaynone");
+   $$(".info.row").addClass("displaynone");
+   $$(".ispezioneDomini").addClass("displaynone");
+   $$(".submitIspezioneDettaglio").addClass("displaynone");
+    $$(".submitIspezioneDettaglioInvia").addClass("displaynone");
+    if(!window.sessionStorage.getObj("puntiVendita")){
+       getPuntiVendita();
+   }
+   if(!window.sessionStorage.getObj("tipiEvento")){
+       getTipiEvento();
+   }
+   
+   populatePuntiVendita();
+   populateTipiEvento();
 
+   $$('.submitIspezioneHeader').on('click', function () {
+        if(!$$(".tipoIspezioneSelect").val() || !$$(".puntiVenditaIspezioneSelect").val()){
+            myApp.alert("Selezionare il tipo evento e il punto vendita");
+            return;
+        }
+        myApp.showPreloader();
+        setTimeout(function () { prepareSubmitIspezioneHeader();}, 1000);     
+   });
+   $$(".submitIspezioneDettaglio").on('click', function () {
+        if(!$$(".tipoIspezioneSelect").val() || !$$(".puntiVenditaIspezioneSelect").val()){
+            myApp.alert("Selezionare il tipo evento e il punto vendita");
+            return;
+        }
+        myApp.showPreloader();
+        var status = "B";
+        setTimeout(function () { prepareSubmitIspezioneDettaglio(status);}, 1000);     
+   });
+    $$(".submitIspezioneDettaglioInvia").on('click', function () {
+        
+        var okControlli = "ok";
+        $$(".controlloIsp").each(function(index){
+            if($$(this).val() === "")
+                okControlli = ""
+        });
+        
+        
+        
+        if(!$$(".tipoIspezioneSelect").val() || !$$(".puntiVenditaIspezioneSelect").val() || !okControlli){
+            myApp.hidePreloader()
+            myApp.alert("Per inviare l'ispezione tutti i campi devono essere compilati");
+            return;
+        }
+        var status = "I";
+        myApp.showPreloader();
+        setTimeout(function () { prepareSubmitIspezioneDettaglio(status);}, 1000);     
+   });
+//      $$('#file-to-upload').on('change', function(){
+//        // alert($$(this).val());
+//        $$('#file-label').html( $$(this).val().replace(/C:\\fakepath\\/i, '') );
+//        // console.log('filename: '+$$("#file-to-upload")[0].files[0].name);
+//        // console.log('filetype:  '+$$("#file-to-upload")[0].files[0].type);
+//    });
+    $$(".btn-camera-upload").click(function () {
+        capturePhotoWithDataMULTI();
+    });
+    $$(".allegatiIspezione").click(function () {
+        prepareSaveAttach();
+    });
+     
+});
+
+//STORICO ISPEZIONI
+var storicoIspezioni = myApp.onPageInit("storicoIspezioni", function (page) {
+    
+    var myCalendarIspezioni = myApp.calendar({
+        input: '.datePickerFrom',
+        dateFormat: 'dd/mm/yyyy',
+        closeOnSelect: true,
+        monthNames: months,
+        dayNamesShort: days
+    });
+    var myCalendar2Ispezioni = myApp.calendar({
+        input: '.datePickerTo',
+        dateFormat: 'dd/mm/yyyy',
+        closeOnSelect: true,
+        monthNames: months,
+        dayNamesShort: days
+    });
+   if(!window.sessionStorage.getObj("puntiVendita")){
+       getPuntiVendita();
+   }
+   if(!window.sessionStorage.getObj("tipiEvento")){
+       getTipiEvento();
+   }
+   populatePuntiVendita();
+   populateTipiEvento();
+   $$(".submitRicercaIspezioni").on('click', function () {
+        myApp.showPreloader();
+        setTimeout(function () { prepareRicercaIspezioni();}, 1000);     
+   });
+});
+
+var editIspezione = myApp.onPageInit("editIspezione", function (page) {
+   var idIspezione = page.query.id;
+   var status = page.query.status;
+   // richiamo il dettaglio dell'ispezione
+   myApp.showPreloader();
+   getIspezioneDetails(idIspezione);
+     $$(".sendIspezione").on('click', function () {
+        if(!$$(".editIspezione select").val()){
+            myApp.alert("Per inviare l'ispezione tutti i campi devono essere compilati");
+            return;
+        }
+        var status = "I";
+        myApp.showPreloader();
+        setTimeout(function () { prepareSubmitIspezioneDettaglio(status);}, 1000);     
+   });
+      $$(".submitIspezioneDettaglio").on('click', function () {
+        if(!$$(".tipoIspezioneSelect").val() || !$$(".puntiVenditaIspezioneSelect").val()){
+            myApp.alert("Selezionare il tipo evento e il punto vendita");
+            return;
+        }
+        myApp.showPreloader();
+        var status = "B";
+        setTimeout(function () { prepareSubmitIspezioneDettaglio(status);}, 1000);     
+   });
+   $$(".btn-camera-upload").click(function () {
+        capturePhotoWithDataMULTI();
+    });
+    
+});
 
 
