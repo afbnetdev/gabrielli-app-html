@@ -209,7 +209,7 @@ function buildDocumentTable(myList, columns, limit, lastIndexDoc) {
          //myApp.alert('url: '+linkPDF);
          if(linkPDF){
             //var ref = cordova.InAppBrowser.open(linkPDF, '_system', 'location=yes');
-          var ref = window.open(linkPDF, '_system', 'location=yes'); 
+          var ref = window.open(linkPDF, '_blank', 'location=yes'); 
          }else{
              myApp.alert("Impossibile reperire il Pdf", "Pdf")
          }
@@ -435,8 +435,8 @@ function setUserProfile(data){
     
    window.sessionStorage.setItem("userProfile", groupArray);
 }
-function isInArray(days, day) {
-    return days.indexOf(day.toLowerCase()) > -1;
+function isInArray(gruppi, gruppo) {
+    return gruppi.split(",").indexOf(gruppo.toLowerCase()) > -1;
 }
 function verifyUserProfile(){
        if(!isInArray(window.sessionStorage.userProfile,"ammin") && !isInArray(window.sessionStorage.userProfile,"super_doc")){
@@ -868,6 +868,10 @@ function deleteImg(numeroImg){
 function openPdfIspezione(idIspezione){
     
                 var linkPdf = TEST_URL+"/GabrielliAppV2WS/rest/pdf/get/"+idIspezione;
+				if(typeof device == 'undefined'){
+					window.open(linkPdf, '_blank', 'location=yes'); 
+					return;
+				}
                 myApp.showPreloader();
                 var fileURL = testPathCustom+idIspezione+".pdf";
                 var myBase64 = "";

@@ -338,6 +338,30 @@ div.ispezioneList ul{
 .picker-calendar.picker-modal{
     z-index: 99998 !Important;
 }
+.refresh-btn{
+    left: 16px;
+    bottom: 35px;
+    position: absolute;
+}
+.refresh-btn .floating-button{
+    right: 0;
+    bottom: 0;
+    position: relative;
+}
+.btn-camera-upload{
+	display:none !important;
+}
+div.list-block.virtual-list.ispezioneList.media-list li{
+    position:static !Important;
+}
+
+p.nuovaIspezione, p.storicoIspezioni, a.submitRicercaIspezioni{
+	    width: 50% !important;
+    margin: 1em auto !important;
+}
+.ispezioniContainer.row .data-table{
+	width:100% !Important; 
+}
 @media (max-width: 480px) and (orientation: portrait) {
     .tbodyDocumentList td{
         padding-top: 5px;
