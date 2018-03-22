@@ -1,0 +1,63 @@
+
+
+<div class="pages">
+    <div data-page="listaPlichi" class="page navbar-through listaPlichi">
+        <div class="page-content">
+            <div class="content-block">
+                <h3 CLASS="nuovaIspezioneh3">RICERCA PLICHI</h3>
+              
+                 <div class="puntiVenditaPlicoChiavi row marginBottom40">
+                    <div class="col-40">
+                         <span>Punto vendita</span>
+                         <i class="f7-icons iconCalendar">home</i>
+                    </div>
+                    <div class="col-60">
+                            <a href = "#" data-searchbar = "true" data-searchbar-placeholder = "Ricerca Punti Vendita" class = "item-link smart-select">
+                            <select name="pv" class="puntiVenditaPlicoChiaviSelect">
+                                <option value="">Selez.re punto vendita</option>
+                            </select>
+                             <div class = "item-content">
+                                    <div class = "item-inner">
+                                       <div class = "item-title"></div>
+                                       
+                                    </div>
+                                 </div>
+                         </a>
+                    </div>
+                 </div>
+               
+                 <div class="dipendentiPlico row marginBottom40">
+                    <div class="col-40">
+                         <span>Dipendente</span>
+                         <i class="f7-icons iconCalendar">persons</i>
+                    </div>
+                    <div class="col-60">
+                            <div class="col-60">
+                        <a href = "#"   data-searchbar = "true" data-searchbar-placeholder = "Ricerca dipendenti" class = "item-link smart-select linkRicercaDipendenti disabled">
+                            <select  class="dipendentiPlicoSelect">
+                                <option value="">Tutti i dipendenti</option>
+                            </select>
+                            <div class = "item-content">
+                                    <div class = "item-inner">
+                                       <div class = "item-title"></div>                                      
+                                    </div>
+                                 </div>
+                        </a>
+                    </div>
+                    </div>
+                 </div>
+                
+                     <p><a class="button button-fill button-big button-raised color-amber btn-spacer submitRicercaPlichi marginBottom40 disabled" href="#" >Ricerca</a></p>
+                 <div class="listaPlichiContainer row">
+<!--                <p class="ispezioniSearchCount">Ispezioni trovate: <span class="ispezioniCountSpan"></span></p>-->
+                <div class="data-table data-table-collapsible data-table-init" >
+                    <table>
+                        <thead></thead>
+                        <tbody class="tbodyListaPlichi"></tbody>
+                    </table>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>

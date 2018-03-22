@@ -1,0 +1,91 @@
+<div class="pages">
+    <div data-page="editPlico" class="page">
+        <div class="page-content editPlico">
+            <div class="content-block">
+                <h3 CLASS="nuovaIspezioneh3">MODIFICA PLICO</h3>
+                <div class="idPlicoDetail row marginBottom40">
+                     <div class="col-40">
+                         <span>ID Plico</span>
+                        <i class="f7-icons iconCalendar">ticket</i>
+                    </div>
+                    <div class="col-60">
+                            <span class="bold idPlicoClass"></span>
+                    </div>
+                </div>
+               <div class="puntiVenditaPlicoDetail row marginBottom40">
+                    <div class="col-40">
+                         <span>Punto vendita</span>
+                         <i class="f7-icons iconCalendar">home</i>
+                    </div>
+                    <div class="col-60">
+                        <span class="bold puntoVenditaPlicoEdit"></span>
+                    </div>
+                 </div>
+                <div class="dipendentiPlico row marginBottom40">
+                    <div class="col-40">
+                         <span>Dipendente</span>
+                         <i class="f7-icons iconCalendar">persons</i>
+                    </div>
+                    <div class="col-60">
+                            <div class="col-60">
+                        <a href = "#"   data-searchbar = "true" data-searchbar-placeholder = "Ricerca dipendenti" class = "item-link smart-select linkRicercaDipendenti ">
+                            <select  class="dipendentiPlicoSelectEdit">
+                                <option value="">Selez.re dipendente</option>
+                            </select>
+                            <div class = "item-content">
+                                    <div class = "item-inner">
+                                       <div class = "item-title"></div>  
+                                       <div class="item-after"></div>
+                                    </div>
+                                 </div>
+                        </a>
+                    </div>
+                    </div>
+                 </div>
+                 <div class="puntiVenditaPlicoDetail row marginBottom40">
+                    <div class="col-40">
+                         <span>Descrizione plico</span>
+                         <i class="f7-icons iconCalendar">data</i>
+                    </div>
+                    <div class="col-60">
+                        <textarea  class="bold descrizionePlicoEdit" ></textarea>
+                    </div>
+                 </div>
+                  <div class="datePickerContainer row">
+                    <div class="col-40">
+                        <span>Data inizio validità</span>
+                        <i class="f7-icons iconCalendar">calendar</i>
+                    </div>
+                    <div class="col-60">
+                        <input type="text" value="" placeholder="" class="datePickerFrom datePlicoDa displayblock" />
+                    </div>
+                    
+                </div>
+                  <div class="datePickerContainer row">
+                    <div class="col-40">
+                        <span>Data fine validità</span>
+                        <i class="f7-icons iconCalendar">calendar</i>
+                    </div>
+                    <div class="col-60">
+                       <input type="text" value="" placeholder="" class="datePickerTo datePlicoA displayblock" />
+                   </div>
+                    
+                </div>
+                <div class="addKeyContainer row marginBottom40">
+                    <div class="col-40">
+                         <span>Aggiungi una chiave</span>
+                         <i class="f7-icons iconCalendar">lock</i>
+                    </div>
+                    <div class="col-60">
+                        <button class="col button button-fill color-yellowCustom addKeyBtn">Aggiungi</button>
+                    </div>
+                 </div>
+                <h4 CLASS="listaChiaviH4 ">Lista chiavi associate</h4>
+                <div class="containerListaChiavi marginBottom40">
+                  
+                </div>
+                <p><a class="button button-fill button-big button-raised color-amber btn-spacer savePlicoModify" href="#" >SALVA MODIFICHE</a></p>
+            </div>
+        </div>
+    </div>
+</div>

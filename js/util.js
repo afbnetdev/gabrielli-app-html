@@ -455,6 +455,11 @@ function verifyUserProfile(){
         }else{
             $$(".gestioneControlli").show();
         }
+        if(!isInArray(window.sessionStorage.userProfile,"sicurezza_patrimoniale")){
+            $$(".gestionePlichi").hide();
+        }else{
+            $$(".gestionePlichi").show();
+        }
 }
 
 function formatAmountToFloat(amount){
@@ -468,13 +473,33 @@ function formatAmountToFloat(amount){
 
 function populatePuntiVendita(){
     var jsonPuntiVendita = JSON.parse(window.sessionStorage.getObj("puntiVendita"));
-    $.each(jsonPuntiVendita, function (i, pv) {
-    $('.puntiVenditaIspezioneSelect').append($('<option>', { 
-        value: pv.idPdv,
-        text : pv.codicePdv+" - "+pv.localita
-    }));
-});
+  
+    if($('.puntiVenditaIspezioneSelect').length > 0){
+        $.each(jsonPuntiVendita, function (i, pv) {
+            $('.puntiVenditaIspezioneSelect').append($('<option>', { 
+                value: pv.idPdv,
+                text : pv.codicePdv+" - "+pv.localita
+            }));
+        });
+    }
     
+       // popolo la select della ricerca plichi
+    if($('.puntiVenditaPlicoChiaviSelect').length > 0){
+        $.each(jsonPuntiVendita, function (i, pv) {
+            $('.puntiVenditaPlicoChiaviSelect').append($('<option>', { 
+                value: pv.idPdv,
+                text : pv.codicePdv+" - "+pv.localita
+            }));
+        });
+    }
+    if($('.puntiVenditaPlicoChiaviSelectCreate').length > 0){
+        $.each(jsonPuntiVendita, function (i, pv) {
+            $('.puntiVenditaPlicoChiaviSelectCreate').append($('<option>', { 
+                value: pv.idPdv,
+                text : pv.codicePdv+" - "+pv.localita
+            }));
+        });
+    }
 }
 function populateTipiEvento(){
     var jsonTipiEvento = JSON.parse(window.sessionStorage.getObj("tipiEvento"));
@@ -727,7 +752,24 @@ function populateListaIspezioni(objIspezioni){
     // rendo visibile la parte degli allegati
      $$(".divDocContainer").removeClass("displaynone");
       $$(".divImgContainer").removeClass("displaynone");
-    
+       if(objIspezione.allegatiIspezione && objIspezione.allegatiIspezione.length > 0){
+        $(".fileAllegatiPre").removeClass("displaynone");
+        
+        for(var i = 0; i < objIspezione.allegatiIspezione.length; i++){
+            var fileAllegato = "";
+            try{
+                fileAllegato = objIspezione.allegatiIspezione[i].pathAllegato;
+                fileAllegato = fileAllegato.split("/");
+                fileAllegato = fileAllegato[fileAllegato.length - 1];
+            }catch (exception) {
+                fileAllegato = "Nome del file non disponibile";
+            }
+
+            $(".fileAllegatiPre").append("<p>"+fileAllegato+"</p>");
+        }
+    }else{
+        $(".fileAllegatiPre").addClass("displaynone");
+    }
  }
  
  function disableInputEditIspezione(){
@@ -941,6 +983,238 @@ function verifyResult(selectElement){
     }else{
         $(".dataLimiteEvento-"+selectElement.dataset.idcontrollo).remove();
     }
+}
+
+function populateDipendentiFromPdv(data){
+        if($('.dipendentiPlicoSelect').length > 0){
+            //SVUOTO LE OPTION DELLA SELECT E FACCIO VISUALIZZARE LA LABEL DI DEFAULT TUTTI I DIPENDENTI
+            $('.dipendentiPlicoSelect option').remove();
+            $('.dipendentiPlicoSelect').val("");
+            $('.dipendentiPlicoSelect').append($('<option value="">Tutti i dipendenti</option>'));
+            $('.dipendentiPlicoSelect').siblings().find(".item-after").text("Tutti i dipendenti");
+            $.each(data, function (i, d) {
+                $('.dipendentiPlicoSelect').append($('<option>', { 
+                    value: d.idDipendente,
+                    text : d.nome+" "+d.cognome
+                }));
+            });
+            $('.linkRicercaDipendenti').removeClass("disabled");
+            $('.submitRicercaPlichi').removeClass("disabled");
+    }
+    
+}
+function populateDipendentiFromPdvCreatePlico(data){
+        if($('.dipendentiPlicoSelectCreate').length > 0){
+            //SVUOTO LE OPTION DELLA SELECT E FACCIO VISUALIZZARE LA LABEL DI DEFAULT TUTTI I DIPENDENTI
+            $('.dipendentiPlicoSelectCreate option').remove();
+            $('.dipendentiPlicoSelectCreate').val("");
+            $('.dipendentiPlicoSelectCreate').append($('<option value="">Selez.re un dipendente</option>'));
+            $('.dipendentiPlicoSelectCreate').siblings().find(".item-after").text("Selez.re un dipendente");
+            $.each(data, function (i, d) {
+                $('.dipendentiPlicoSelectCreate').append($('<option>', { 
+                    value: d.idDipendente,
+                    text : d.nome+" "+d.cognome
+                }));
+            });
+            $('.linkRicercaDipendentiCreate').removeClass("disabled");
+   
+    }
+    
+}
+
+
+function prepareRicercaPlichi(){
+    var idPdv = $$('.puntiVenditaPlicoChiaviSelect').val() ? $$('.puntiVenditaPlicoChiaviSelect').val() : 0;
+    var idDipendente = $$('.dipendentiPlicoSelect').val() ? $$('.dipendentiPlicoSelect').val() : 0;
+    var reverse = false;
+    var pageSize = 500;
+    var key="validitaA";
+    
+    var objQueryParam = {
+        'firstResult': '0', 'pageSize': pageSize, 'sortKey': key, 'reverse' : reverse, 'selectedPuntoVendita' : idPdv, 'selectedDipendente' : idDipendente
+    };
+    
+    getListaPlichi(objQueryParam);
+}
+
+
+function populateListaPlichi(objPlichi){
+    $$('.tbodyListaPlichi').empty();
+   var header =  ['Id plico','Descrizione' ,'Inizio Validità', 'Fine Validità','Dipendente', 'Punto vendita'];
+   if ($$('.headerTable').length === 0 && objPlichi.length > 0) {
+        var headerTr$ = $$('<tr/>');
+        for (var i = 0; i < header.length; i++) {
+            headerTr$.append($$('<th class="headerTable"/>').html(header[i]));
+        }
+        $$(".data-table > table > thead").append(headerTr$);
+    }
+    if (objPlichi.length === 0) {
+        $$(".data-table > table > thead").empty();
+        myApp.alert("Nessun plico trovato","Ricerca plichi");
+    }
+    for (var i = 0; i < objPlichi.length; i++) {
+        var row$ = $$('<tr/>');
+        row$.append($$('<td data-collapsible-title="' + header[0] + '"/>').html('<a href="plicoChiavi/detailPlico.html?idPlico='+ objPlichi[i].idPlico +'" class="idPlicoList button button-fill button-raised yellow">' + objPlichi[i].idPlico + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[1] + '"/>').html('<a href="#" class="plicoDescrizione">' + objPlichi[i].descrizione + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[2] + '"/>').html('<a href="#" class="plicoValiditaDa">' + formatDateFromTimeStampToItalian(objPlichi[i].validitaDa) + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[3] + '"/>').html('<a href="#" class="plicoValiditaA">' + formatDateFromTimeStampToItalian(objPlichi[i].validitaA) + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[4] + '"/>').html('<a href="#" class="plicoDipendente">' + objPlichi[i].dipendente.cognome + ' '+objPlichi[i].dipendente.nome+'</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[5] + '"/>').html('<a href="#" class="plicoPdv">' + objPlichi[i].puntoVendita.denominazione + '</a>'));
+        
+        
+        $$(".data-table > table > tbody").append(row$);
+        
+    }
+    
+    
+}
+
+function populateDetailsPlico(objPlico){
+    
+    $$(".idPlicoClass").text(objPlico.idPlico);
+    $$(".puntoVenditaPlico").text(objPlico.puntoVendita.denominazione);
+    $$(".dipendentiPlicoSpan").text(objPlico.dipendente.cognome + " " + objPlico.dipendente.nome);
+    $$(".datePlicoDa").text(formatDateFromTimeStampToItalian(objPlico.validitaDa));
+    $$(".datePlicoA").text(formatDateFromTimeStampToItalian(objPlico.validitaA));
+    
+    
+    
+    //populate tabella chiavi
+    var header =  ['Id chiave','Descrizione'];
+    if ($$('.headerTable').length === 0 && objPlico.chiavi.length > 0) {
+        var headerTr$ = $$('<tr/>');
+        for (var i = 0; i < header.length; i++) {
+            headerTr$.append($$('<th class="headerTable"/>').html(header[i]));
+        }
+        $$(".data-table > table > thead").append(headerTr$);
+    }
+    if (objPlico.chiavi.length === 0) {
+        $$(".data-table > table > thead").empty();
+        
+    }
+    for (var i = 0; i < objPlico.chiavi.length; i++) {
+        var row$ = $$('<tr/>');
+        row$.append($$('<td data-collapsible-title="' + header[0] + '"/>').html('<a href="#" class="plicoId">' + objPlico.chiavi[i].idChiave + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[1] + '"/>').html('<a href="#" class="plicoDescrizione">' + objPlico.chiavi[i].descrizione + '</a>'));
+        $$(".data-table > table > tbody").append(row$);
+    }
+}
+
+function addPlicoKey(){
+     myApp.prompt('Inserisci la descrizione della chiave',' Nuova chiave', function (value) {
+            if(value){
+                var nuovaChiaveChips =   '<div class="chip">'
+                                            +'<div class="chip-label chipKeyValue">'+value+'</div><a href="#" onclick="deleteKey(this);" class="chip-delete deleteCustom"></a>'
+                                         +'</div>';
+                $('.containerListaChiavi').append($(nuovaChiaveChips));    
+            }       
+        }); 
+}
+
+function deleteKey(chip){
+        var keyChip =$$(chip);
+        myApp.confirm("Vuoi cancellare la chiave: <b>" + keyChip.parent().text() + "</b> ?", 'Cancellazione chiave', function() {
+            keyChip.parent().remove();
+        });
+}
+function populateEditPlico(objPlico){
+    $$(".idPlicoClass").text(objPlico.idPlico);
+    $$(".puntoVenditaPlicoEdit").text(objPlico.puntoVendita.denominazione);
+    $(".puntoVenditaPlicoEdit").data("idPuntoVendita",objPlico.puntoVendita.idPdv);
+    $$(".descrizionePlicoEdit").text(objPlico.descrizione);
+    $$(".datePlicoDa").val(formatDateFromTimeStampToItalian(objPlico.validitaDa));
+    $$(".datePlicoA").val(formatDateFromTimeStampToItalian(objPlico.validitaA));
+    
+    getDipendentiFromPdv(objPlico.puntoVendita.idPdv, "editPlico");
+    $.each($('.dipendentiPlicoSelectEdit option'), function (i, d){
+            if(objPlico.dipendente.idDipendente === parseInt(d.value)){
+                $(d).attr("selected",true);
+            }
+    });
+    $(".dipendentiPlicoSelectEdit").parent().find('.item-after').text($(".dipendentiPlicoSelectEdit").find("option:selected").text());
+    
+     $.each(objPlico.chiavi, function (i, d){
+          var nuovaChiaveChips =   '<div class="chip">'
+                                            +'<div class="chip-label chipKeyValue">'+d.descrizione+'</div><a href="#" onclick="deleteKey(this);" class="chip-delete deleteCustom"></a>'
+                                         +'</div>';
+        $$(".containerListaChiavi").append(nuovaChiaveChips);
+    });
+    
+}
+
+function populateDipendentiFromPdvEdit(dipendenti){
+    $.each(dipendenti, function (i, d){
+              $('.dipendentiPlicoSelectEdit').append($('<option>' , { 
+                  value: d.idDipendente,
+                  text : d.nome+" "+d.cognome
+              }));
+    });
+}
+
+
+function preparePlicoSaveModify(){
+    if($$(".dipendentiPlicoSelectEdit").val() === "" && (".chip").length === 0){
+        myApp.alert("Controllare di aver selezionato un dipendete e di aver inserito almeno una chiave nel plico","Errore");
+        return;
+    }
+    if(!$$(".datePickerFrom").val() && !$$(".datePickerTo").val()){
+        myApp.alert("Controllare di aver selezionato una data valida","Errore");
+        return;
+    }
+    
+    var chiaviPlicoList = [];
+    
+    $.each($$(".chipKeyValue"), function (i, d){ 
+        chiaviPlicoList.push({ 
+	        "descrizione" : d.textContent
+	});
+    });
+    
+    var data = {
+                idPlico: parseInt($$(".idPlicoClass").text()),
+                puntoVendita: { idPdv: $(".puntoVenditaPlicoEdit").data().idPuntoVendita },
+                descrizione:  $$(".descrizionePlicoEdit").text(),
+                chiavi: chiaviPlicoList,
+                validitaDa: new Date(formatDateFromItalian($$(".datePickerFrom").val())),
+                validitaA: new Date(formatDateFromItalian($$(".datePickerTo").val())),
+                dipendente: { idDipendente: parseInt($$(".dipendentiPlicoSelectEdit").val()) }
+		};
+    updatePlico(data);
+                
+}
+
+function prepareCreatePlico(){
+     if($$(".dipendentiPlicoSelectEdit").val() === "" && (".chip").length === 0){
+        myApp.alert("Controllare di aver selezionato un dipendete e di aver inserito almeno una chiave nel plico","Errore");
+        return;
+    }
+    if(!$$(".datePickerFrom").val() && !$$(".datePickerTo").val()){
+        myApp.alert("Controllare di aver selezionato una data valida","Errore");
+        return;
+    }
+    if(!$$(".descrizionePlicoEditCreate").val()){
+        myApp.alert("Controllare di aver inserito una descrizione","Errore");
+        return;
+    }
+        var chiaviPlicoList = [];
+    
+    $.each($$(".chipKeyValue"), function (i, d){ 
+        chiaviPlicoList.push({ 
+	        "descrizione" : d.textContent
+	});
+    });
+    
+    var data = {
+                
+                puntoVendita: { idPdv: $$(".puntiVenditaPlicoChiaviSelectCreate").val() },
+                descrizione:  $$(".descrizionePlicoEditCreate").val(),
+                chiavi: chiaviPlicoList,
+                validitaDa: new Date(formatDateFromItalian($$(".datePickerFrom").val())),
+                validitaA: new Date(formatDateFromItalian($$(".datePickerTo").val())),
+                dipendente: { idDipendente: parseInt($$(".dipendentiPlicoSelectCreate").val()) }
+		};
+    
+    createPlico(data);
 }
 
 
