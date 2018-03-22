@@ -805,7 +805,7 @@ function convertFileToDataURLviaFileReader(url, callback) {
                           }
                           reader.readAsDataURL(xhr.response);
                         };
-                       xhr.open('GET', url+"?JsessionId"+window.sessionStorage.jsessionid);
+                       xhr.open('GET', url+"?JsessionId="+window.sessionStorage.jsessionid);
                         xhr.responseType = 'blob';
                         xhr.send();
 }
