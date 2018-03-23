@@ -907,9 +907,9 @@ function deleteImg(numeroImg){
     $("div.imgContent[data-numeroimg='"+numeroImg+"']").remove();
 }
 
-function openPdfIspezione(idIspezione){
+function openPdfIspezione(idIspezione){;
     
-                var linkPdf = TEST_URL+"/GabrielliAppV2WS/rest/pdf/get/"+idIspezione;
+                var linkPdf = TEST_URL+"/GabrielliAppV2WS/rest/pdf/get/"+idIspezione+"?jSessionID="+window.sessionStorage.jsessionid;
 				if(typeof device == 'undefined'){
 					window.open(linkPdf, '_blank', 'location=yes'); 
 					return;
