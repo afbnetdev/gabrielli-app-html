@@ -572,7 +572,7 @@ function sendIspezioneHeader(commenti,controllore,dataIspezione,presenti,tipoEve
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :TEST_URL+'/GabrielliAppV2WS/rest/ispezione/create',
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/ispezione/create',
         method: 'POST',
         data: evaluation,
         async: false,
@@ -609,7 +609,7 @@ function submitIspezioneDettaglio(status,jsonObj, commenti,controllore,dataIspez
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :TEST_URL+'/GabrielliAppV2WS/rest/ispezione/merge',
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/ispezione/merge',
         method: 'POST',
         data: evaluation,
         async: false,
@@ -652,7 +652,7 @@ function getTipiEvento(){
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :TEST_URL+'/GabrielliAppV2WS/rest/tipiEvento',
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/tipiEvento',
         method: 'GET',
         async: false,
         contentType: 'application/json',
@@ -675,7 +675,7 @@ function getPuntiVendita(){
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :TEST_URL+'/GabrielliAppV2WS/rest/puntiVendita',
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/puntiVendita',
         method: 'GET',
         async: false,
         contentType: 'application/json',
@@ -701,7 +701,7 @@ function getControlliFromIdEvento(idTipoEvento, status){
            'jSessionID': window.sessionStorage.jsessionid
            
         },
-        url :TEST_URL+'/GabrielliAppV2WS/rest/tipiEventoControlli?idTipoEvento='+idTipoEvento,
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/tipiEventoControlli?idTipoEvento='+idTipoEvento,
         method: 'GET',
         async: false,
         contentType: 'application/json',
@@ -725,7 +725,7 @@ function getIspezioni(variableFilters){
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :TEST_URL+'/GabrielliAppV2WS/rest/ispezione/listIspezioni'+variableFilters,
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/ispezione/listIspezioni'+variableFilters,
         method: 'GET',
         async: false,
         contentType: 'application/json',
@@ -750,7 +750,7 @@ function getIspezioneDetails(idIspezione){
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :TEST_URL+'/GabrielliAppV2WS/rest/ispezione/getIspezione?idIspezione='+idIspezione,
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/ispezione/getIspezione?idIspezione='+idIspezione,
         method: 'GET',
         async: false,
         contentType: 'application/json',
@@ -779,7 +779,7 @@ function saveAttach(formData, idIspezione){
            'jSessionID': window.sessionStorage.jsessionid
           
         },
-        url :TEST_URL+'/GabrielliAppV2WS/rest/allegatoIspezione/create',
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/allegatoIspezione/create',
         method: 'POST',
         data: formData,
         async: false,
@@ -821,7 +821,7 @@ function createPdfFromSavedIsp(idIspezione){
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :TEST_URL+'/GabrielliAppV2WS/rest/pdf/create/'+idIspezione,
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/pdf/create/'+idIspezione,
         method: 'GET',
         async: false,
         contentType: 'application/json',
@@ -845,7 +845,7 @@ function getDipendentiFromPdv(idPdv,action){
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :MACCHINA_VIRTUALE+'/GabrielliAppV2WS/rest/dipendenti',
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/dipendenti',
         method: 'GET',
         async: false,
         contentType: 'application/json',
@@ -877,7 +877,7 @@ function getListaPlichi(filter){
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :MACCHINA_VIRTUALE+'/GabrielliAppV2WS/rest/plichi/getList',
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichi/getList',
         method: 'GET',
         async: false,
         contentType: 'application/json',
@@ -904,7 +904,7 @@ function getPlicoDetails(idPlico,editOrDetails){
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :MACCHINA_VIRTUALE+'/GabrielliAppV2WS/rest/plichi/getById/'+idPlico,
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichi/getById/'+idPlico,
         method: 'GET',
         async: false,
         contentType: 'application/json',
@@ -936,7 +936,7 @@ function deletePlico(idPlico){
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :MACCHINA_VIRTUALE+'/GabrielliAppV2WS/rest/plichi/delete/'+idPlico,
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichi/delete/'+idPlico,
         method: 'GET',
         async: false,
         contentType: 'application/json',
@@ -968,7 +968,7 @@ function updatePlico(plico){
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :MACCHINA_VIRTUALE+'/GabrielliAppV2WS/rest/plichi/update',
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichi/update',
         method: 'POST',
         async: false,      
         contentType: 'application/json',
@@ -999,7 +999,7 @@ function createPlico(plico){
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :MACCHINA_VIRTUALE+'/GabrielliAppV2WS/rest/plichi/create',
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichi/create',
         method: 'POST',
         async: false,      
         contentType: 'application/json',
@@ -1031,7 +1031,7 @@ function sendReportIspezione(idIspezione){
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :TEST_URL+'/GabrielliAppV2WS/rest/ispezione/sendReport/'+idIspezione,
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/ispezione/sendReport/'+idIspezione,
         method: 'GET',
         async: false,
         contentType: 'application/json',
