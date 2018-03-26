@@ -621,7 +621,11 @@ function submitIspezioneDettaglio(status,jsonObj, commenti,controllore,dataIspez
            if(status === "I"){
                  createPdfFromSavedIsp(parseInt($$(".idIspezione").text()));
                  prepareSaveAttach();
+                 $$(".submitIspezioneDettaglio").addClass("displaynone");
+                 $$(".sendIspezione").addClass("displaynone");
+                  $$(".submitIspezioneDettaglioInvia").addClass("displaynone");
                  myApp.alert("Ispezione inviata", "Ispezione");
+                 
                  
            }else{
                 prepareSaveAttach();
@@ -805,7 +809,7 @@ function convertFileToDataURLviaFileReader(url, callback) {
                           }
                           reader.readAsDataURL(xhr.response);
                         };
-                       xhr.open('GET', url+"?JsessionId="+window.sessionStorage.jsessionid);
+                        xhr.open('GET', url+"?JsessionId="+window.sessionStorage.jsessionid);
                         xhr.responseType = 'blob';
                         xhr.send();
 }
