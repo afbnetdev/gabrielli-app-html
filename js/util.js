@@ -561,6 +561,8 @@ function populateControlli(controlliObj, status){
     // Array with items data
     items: controlliObjSort ,
     height:98,
+    rowsBefore:100,
+    rowsAfter:100,   
     // Template 7 template to render each item
     template: '<li class="item-content">' +
                   '<div class="item-inner-row">' +
