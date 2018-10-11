@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src * 'unsafe-inline' 'unsafe-eval'">
+        <!-- Required meta tags-->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <title>Gabrielli App</title>
+        <!-- CSS -->
+
+        <link rel="stylesheet" href="lib/framework7/css/framework7.material.min.css">
+        <link rel="stylesheet" href="lib/framework7/css/framework7.material.colors.min.css">
+        <link rel="stylesheet" href="lib/framework7/css/framework7-icons.css">
+        <link rel="stylesheet" href="css/table.css">
+        <link rel="stylesheet" href="css/themeStyle.css">
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body class="theme-brown">
+        <!-- Panels overlay-->
+        <div class="panel-overlay"></div>
+        <!-- Left panel with reveal effect-->
+        <div class="panel panel-left panel-reveal ">
+            <div class="list-block">
+                <ul>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <p><a href="index.html" class="close-panel">Home</a></p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content gestioneTicket">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <p><a href="manage_ticket.html" class="close-panel">Gestione Ticket</a></p>
+                            </div>
+                        </div>
+                    </li>
+                    <!--                    <li class="item-content">
+                                            <div class="item-inner">
+                                                <div class="item-title">
+                                                    <p><a href="ric_int_it.html" class="close-panel">Richiesta intervento IT</a></p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="item-content">
+                                            <div class="item-inner">
+                                                <div class="item-title">
+                                                    <p><a href="ric_int_dte.html" class="close-panel">Richiesta intervento DTE</a></p>
+                                                </div>
+                                            </div>
+                                        </li>-->
+                    <li class="item-content richiestaDocumenti">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <p><a href="doc_page.html" class="close-panel">Richiesta Documenti</a></p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content gestioneControlli">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <p><a href="controlli/gestione_controlli.html" class="close-panel">Gestione Controlli</a></p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content gestionePlichi">
+                        <div class="item-inner">
+                            <div class="item-title">
+                                <p><a href="plicoChiavi/gestionePlichi.html" class="close-panel">Gestione plichi</a></p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <a href="#" class="button button-fill button-big button-raised color-amber btn-spacer close-panel btn-logout-sidePanel" id="btn-logout">LOGOUT</a>
+            </div>
+        </div>
+        <!-- Views -->
+        <div class="views">
+            <div class="view view-main theme-brown">
+                <!-- Top Navbar-->
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="center"><img id="img-logo" src="public/img/logo.jpg" /></div>
+                    </div>
+                </div>
+                <div class="pages">
+                    <div data-page="privacy" class="page privacy-content">
+                        <div class="page-content pull-to-refresh-content">
+                            <div class="content-block">
+                            <div style="clear: both">&nbsp;</div>
+                                <p>
+                                    Ai sensi dell'articolo 13 del decreto legislativo 196/2003 desideriamo informarLa
+                                    che i dati personali e\o societari da Lei spontaneamente e volontariamente inviati
+                                    e forniti saranno trattati adottando le misure idonee a garantirne la sicurezza
+                                    e la riservatezza, nel rispetto della normativa sopra richiamata.<br>
+                                    <br>
+                                    Tutti i dati da Lei inviati come sopra saranno trattati da dipendenti di Magazzini
+                                    Gabrielli Spa opportunamente incaricati ed istruiti al fine di evitare perdite,
+                                    distruzioni, accessi non autorizzati o trattamenti non consentiti dei dati stessi,
+                                    nonché da società incaricate di gestire servizi amministrativi.<br>
+                                    <br>
+                                    Il trattamento dei dati sarà effettuato sia manualmente che con l'ausilio di mezzi
+                                    elettronici, o comunque automatizzati, e comprende, nel rispetto dei limiti e delle
+                                    condizioni poste dall'articolo 11 del d.lgs. 196/03, tutte le operazioni, o complesso
+                                    di operazioni, previste dallo stesso decreto con il termine "trattamento".
+                                    &nbsp;<br>
+                                    <br>
+                                    Magazzini Gabrielli Spa adotta misure di protezione dei dati coerenti con la loro
+                                    importanza e riservatezza.<br>
+                                    <br>
+                                    I dati da Lei inviati a Magazzini Gabrielli spa vengono dalla stessa trattati esclusivamente
+                                    per le seguenti finalità:<br>
+                                    <br>
+                                    a) rispondere, attraverso modalità cartacee e/o informatizzate, alle richieste di
+                                    informazioni e/o segnalazioni da Lei avanzate;<br>
+                                    <br>
+                                    b) essere inserito in eventuali liste di distribuzione (mailing list);<br>
+                                    <br>
+                                    c) effettuare analisi statistiche;<br>
+                                    <br>
+                                    f) ai sensi dell'art. 130, comma 4 del Codice della Privacy, D.lgs. n. 196/2003,
+                                    per l'invio di comunicazioni commerciali o materiale pubblicitario;<br>
+                                    <br>
+                                    f) ottemperare agli obblighi di legge.<br>
+                                    <br>
+                                    Il conferimento dei dati personali ha natura facoltativa. <br>
+                                    <br>
+                                    I dati personali raccolti non saranno in ogni caso oggetto di diffusione o comunicazione
+                                    a terzi, se non nei casi previsti dalla informativa e/o dalla legge e, comunque,
+                                    con le modalità da questa consentite.<br>
+                                    <br>
+                                    Tutti &nbsp;i dati e le informazioni da Lei comunicate spontaneamente potranno essere
+                                    se del caso usate dalla Magazzini Gabrielli Spa nell'ambito dei fini della propria
+                                    attività.<br>
+                                    <br>
+                                    I dati da Lei conferiti potranno essere mantenuti e trattati dalla Magazzini Gabrielli
+                                    Spa, se dalla stessa ritenuto opportuno, anche a tempo indeterminato fermo comunque
+                                    quanto stabilito all’art.7 del D.Lgs. 196/2003 di cui appresso.<br>
+                                    <br>
+                                    L'art. 7 del Dlgs 196/2003 conferisce all'interessato l'esercizio di specifici diritti.<br>
+                                    <br>
+                                    In particolare:<br>
+                                    <br>
+                                    1. L'interessato ha diritto di ottenere la conferma dell'esistenza o meno di dati
+                                    personali che lo riguardano, anche se non ancora registrati, e la loro comunicazione
+                                    in forma intelligibile.<br>
+                                    <br>
+                                    2. L'interessato ha diritto di ottenere l'indicazione:<br>
+                                    <br>
+                                    a. dell'origine dei dati personali;<br>
+                                    <br>
+                                    b. delle finalità e modalità del trattamento;<br>
+                                    <br>
+                                    c. della logica applicata in caso di trattamento effettuato con l'ausilio di strumenti
+                                    elettronici;<br>
+                                    <br>
+                                    d. degli estremi identificativi del titolare, dei responsabili e del rappresentante
+                                    designato ai sensi dell'articolo 5, comma 2;<br>
+                                    <br>
+                                    e. dei soggetti o delle categorie di soggetti ai quali i dati personali possono
+                                    essere comunicati o che possono venirne a conoscenza in qualità di rappresentante
+                                    designato nel territorio dello Stato, di responsabili o incaricati.<br>
+                                    <br>
+                                    3. L'interessato ha diritto di ottenere:<br>
+                                    <br>
+                                    a. l'aggiornamento, la rettificazione ovvero, se possibile, l'integrazione dei dati;<br>
+                                    <br>
+                                    b. la cancellazione, la trasformazione in forma anonima o il blocco dei dati trattati
+                                    in violazione di legge, compresi quelli di cui non è necessaria la conservazione
+                                    in relazione agli scopi per i quali i dati sono stati raccolti o successivamente
+                                    trattati;<br>
+                                    <br>
+                                    4. L'interessato ha diritto di opporsi, in tutto o in parte:<br>
+                                    <br>
+                                    a. per motivi legittimi al trattamento dei dati personali che lo riguardano, ancorché
+                                    pertinenti allo scopo della raccolta;<br>
+                                    <br>
+                                    b. al trattamento di dati personali che lo riguardano a fini di invio di materiale
+                                    pubblicitario o di vendita diretta o per il compimento di ricerche di mercato o
+                                    di comunicazione commerciale.<br>
+                                    <br>
+                                    Il proprietario dei dati personali può esercitare in qualsiasi momento i diritti
+                                    previsti dall'art. 7 del D.lgs n° 196/2003 - tra i quali si indicano a titolo esemplificativo
+                                    l'accesso, la modifica, l'integrazione e la cancellazione degli stessi, inviando
+                                    un messaggio alla Magazzini Gabrielli Spa alla e-mail <a href="mailto:info@gabriellispa.it">
+                                        info@gabriellispa.it</a>&nbsp; oppure al fax numero ..0736 406202.<br>
+                                    <br>
+                                    Titolare del trattamento è la Magazzini Gabrielli Spa con sede in C.da Monticelli
+                                    snc cap 63100 Ascoli Piceno tel.07364061, telefax&nbsp; 07364062020., e-mail <a href="mailto:info@gabriellispa.it">
+                                        info@gabriellispa.it</a>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
