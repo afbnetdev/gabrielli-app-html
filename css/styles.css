@@ -48,6 +48,29 @@ body{
 
 }
 
+/*-------------------------------
+            Modal Privacy
+-------------------------------*/
+.privacy-content .content-block p {
+    max-width: 1024px;
+    margin: 15px auto;
+}
+
+/*-------------------------------
+            Footer
+-------------------------------*/
+#page-footer {
+    padding: 10px;
+    background-color: #f1f1f1;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+#page-footer a{
+    color: darkgrey;
+}
 
 .data-table tbody td {
     height: auto;

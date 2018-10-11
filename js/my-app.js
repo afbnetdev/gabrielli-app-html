@@ -6,7 +6,14 @@ var myApp = new Framework7({
     uniqueHistory : true,
     smartSelectBackOnSelect:true,
     preroute: function (view, options) {
-        if (!window.sessionStorage.jsessionid) {
+        if(options.url === 'privacy.html' 
+                || (view.activePage.url == 'privacy.html' && options.isBack == true)){
+            myApp.closeModal(".login-screen", false);
+            return true;
+        }else if(view.activePage.fromPage.name == 'privacy'){
+            myApp.loginScreen(".login-screen", false);
+            return true;
+        }else if (!window.sessionStorage.jsessionid) {
             getLogout();
             return false; //required to prevent default router action
         }
@@ -64,41 +71,47 @@ myApp.onPageInit("*", function () {
 /*---------------------------------------
  On EACH page
  ---------------------------------------*/
+$$("#test").click(function () {
+        window.sessionStorage.clear();
+        myApp.closeModal(".login-screen", false);
+    });
+   
  $$("#btn-logout").click(function () {
         window.sessionStorage.clear();
         myApp.loginScreen(".login-screen", false);
-    });
-    $$("#btn-login").click(function () {
-        var formLogin = myApp.formGetData('frm-login');
-        //Get Form Login
-        var chkLogin;
-        chkLogin = validateUser(formLogin.username, formLogin.password);
+});
 
-        if(chkLogin){
-            window.sessionStorage.setItem("username", formLogin.username);  //Set user in session
-            window.sessionStorage.setItem("authorized", 1);                 //Set token auth
-            $$("#box-welcome").html("Benvenuto " + window.sessionStorage.username);
-            myApp.closeModal(".login-screen", false);
-            getUserProfile();
-            getUserAnag();
-            getUserInfo();
-            verifyUserProfile();
-            mainView.router.loadPage({
-                force : true,
-                ignoreCache : true,
-                url :"index.html"
-            });
+$$("#btn-login").click(function () {
+    var formLogin = myApp.formGetData('frm-login');
+    //Get Form Login
+    var chkLogin;
+    chkLogin = validateUser(formLogin.username, formLogin.password);
+
+    if(chkLogin){
+        window.sessionStorage.setItem("username", formLogin.username);  //Set user in session
+        window.sessionStorage.setItem("authorized", 1);                 //Set token auth
+        $$("#box-welcome").html("Benvenuto " + window.sessionStorage.username);
+        myApp.closeModal(".login-screen", false);
+        getUserProfile();
+        getUserAnag();
+        getUserInfo();
+        verifyUserProfile();
+        mainView.router.loadPage({
+            force : true,
+            ignoreCache : true,
+            url :"index.html"
+        });
+    }
+    else{
+        if(!userAndPwdCheck){
+            return;
         }
-        else{
-            if(!userAndPwdCheck){
-                return;
-            }
-            myApp.alert("User name o password errati","Login error");
-        }
-    });
+        myApp.alert("User name o password errati","Login error");
+    }
+});
+    
 //INDEX
 var index = myApp.onPageInit('index', function () {
-    
     if (typeof window.sessionStorage.jsessionid !== 'undefined' &&
             window.sessionStorage.jsessionid !== null &&
             window.sessionStorage.jsessionid !== "") {
@@ -106,6 +119,12 @@ var index = myApp.onPageInit('index', function () {
     } else {
         myApp.loginScreen(".login-screen", false);
     }
+}).trigger();
+
+var privacy = myApp.onPageInit('privacy', function () {
+    $$('.back.link').click(function(){
+        myApp.loginScreen(".login-screen", false);
+    });
 
 
 }).trigger();
@@ -404,16 +423,32 @@ var nuova_ispezione = myApp.onPageInit("nuova_ispezione", function (page) {
                 okControlli = ""
         });
         
+        var checkInvio = true;
+        if(!okControlli){
+            if(!confirm('ci sono controlli non completati, procedere comunque all’invio?')){
+                checkInvio = false;
+            }
+        }
         
-        
-        if(!$$(".tipoIspezioneSelect").val() || !$$(".puntiVenditaIspezioneSelect").val() || !okControlli){
-            myApp.hidePreloader()
-            myApp.alert("Per inviare l'ispezione tutti i campi devono essere compilati");
+        if(checkInvio){
+            var status = "I";
+            myApp.showPreloader();
+            setTimeout(function () { 
+                prepareSubmitIspezioneDettaglio(status);
+            }, 1000);     
+        }else{
+            myApp.hidePreloader();
             return;
         }
-        var status = "I";
-        myApp.showPreloader();
-        setTimeout(function () { prepareSubmitIspezioneDettaglio(status);}, 1000);     
+        
+//        if(!$$(".tipoIspezioneSelect").val() || !$$(".puntiVenditaIspezioneSelect").val() || !okControlli){
+//            myApp.hidePreloader()
+//            myApp.alert("Per inviare l'ispezione tutti i campi devono essere compilati");
+//            return;
+//        }
+//        var status = "I";
+//        myApp.showPreloader();
+//        setTimeout(function () { prepareSubmitIspezioneDettaglio(status);}, 1000);     
    });
 //      $$('#file-to-upload').on('change', function(){
 //        // alert($$(this).val());
@@ -485,6 +520,11 @@ var editIspezione = myApp.onPageInit("editIspezione", function (page) {
         var status = "B";
         setTimeout(function () { prepareSubmitIspezioneDettaglio(status);}, 1000);     
    });
+   $$(".deleteIspezione").on('click', function () {
+        if(confirm("Eliminare l'ispezione?")){
+            prepareDeleteIspezione(idIspezione);
+        }
+    });
    $$(".btn-camera-upload").click(function () {
         capturePhotoWithDataMULTI();
     });
