@@ -1,0 +1,165 @@
+<div class="pages">
+    <div data-page="detailDipendentePlico" class="page">
+        <div class="page-content detailDipendentePlico">
+            <div class="content-block">
+                <h3 CLASS="nuovaIspezioneh3">DETTAGLIO DIPENDENTE</h3>
+                <div class="idDipendenteDetail row marginBottom40">
+                    <div class="col-40">
+                        <span>ID Dipendente</span>
+                       <i class="f7-icons iconCalendar">persons</i>
+                   </div>
+                   <div class="col-60">
+                           <span class="bold idDipendenteClass"></span>
+                   </div>
+                </div>
+                <div class="pdvDipendenteDetail row marginBottom40">
+                    <div class="col-40">
+                        <span>Punto Vendita</span>
+                       <i class="f7-icons iconCalendar">home</i>
+                   </div>
+                   <div class="col-60">
+                           <span class="bold pdvDipendenteClass"></span>
+                   </div>
+                </div>
+                <div class="cognomeDipendenteDetail row marginBottom40">
+                    <div class="col-40">
+                        <span>Cognome</span>
+                       <i class="f7-icons iconCalendar">persons</i>
+                   </div>
+                   <div class="col-60">
+                           <span class="bold cognomeDipendenteClass"></span>
+                   </div>
+                </div>
+                <div class="nomeDipenenteDetail row marginBottom40">
+                    <div class="col-40">
+                        <span>Nome</span>
+                       <i class="f7-icons iconCalendar">persons</i>
+                   </div>
+                   <div class="col-60">
+                           <span class="bold nomeDipendenteClass"></span>
+                   </div>
+                </div>
+                <h4 CLASS="listaChiaviH4 ">Info</h4>
+                <div class="list-block">
+                    <ul>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label">Reperibilità</div>
+                                    <div class="item-input">
+                                        <label class="label-switch">
+                                            <input type="checkbox" class="infoDipendenteReperibilita"/>
+                                            <div class="checkbox"></div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label">Priorità</div>
+                                    <div class="item-input">
+                                        <input type="number" class="infoDipendentePriorita"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label">Allarme</div>
+                                    <div class="item-input">
+                                        <label class="label-switch">
+                                            <input type="checkbox" class="infoDipendenteAllarme"/>
+                                            <div class="checkbox"></div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label">Sequenza</div>
+                                    <div class="item-input">
+                                        <input type="number" class="infoDipendenteSequenza"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label">Gestione Ufficio</div>
+                                    <div class="item-input">
+                                        <label class="label-switch">
+                                            <input type="checkbox" class="infoDipendenteUfficio"/>
+                                            <div class="checkbox"></div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <h4 CLASS="listaChiaviH4 ">Associa plico</h4>
+                <div class="list-block">
+                    <ul>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label">Plico</div>
+                                    <div class="item-input">
+                                        <select class="associaPlicoPlico">
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label">Data inizio validità</div>
+                                    <div class="item-input">
+                                        <input type="text" class="associaPlicoDataDa"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label">Data fine validità</div>
+                                    <div class="item-input">
+                                        <input type="text" class="associaPlicoDataA"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label">Sigillo</div>
+                                    <div class="item-input">
+                                        <input type="text" class="associaPlicoSigillo"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <button class="col button button-fill color-yellowCustom associaPlicoBtn">Aggiungi</button>
+                </div>
+                <h4 CLASS="listaChiaviH4 ">Lista plichi associati</h4>
+                <div class="data-table data-table-collapsible data-table-init tableListaPlichiDipendenteDetails" >
+                    <table>
+                        <thead></thead>
+                        <tbody class="tbodyListaPlichiDipendenteDetails"></tbody>
+                    </table>
+                </div>
+                <p><a class="button button-fill button-big button-raised color-amber btn-spacer saveDipendenteDetail" href="#" >SALVA MODIFICHE</a></p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,7 +3,7 @@
 Initial setup
  ---------------------------------------*/
 
-var URL_ENDPOINT = 'https://portal.gabriellispa.it';
+var URL_ENDPOINT = 'http://portal.gabriellispa.it';
 
 
 //Funzione per settare un obj nel sessionStorage
@@ -320,6 +320,14 @@ function formatDateFromTimeStampToItalian(timeStamp) {
         finalDate = ("0" + d.getDate()).slice(-2) + '/' + ("0" + (d.getMonth() + 1)).slice(-2) + '/' + d.getFullYear();
     }
     return finalDate;
+}
+function parseDateFromItalian(dateStr){
+    var parts =dateStr.split('/');
+	// Please pay attention to the month (parts[1]); JavaScript counts months from 0:
+	// January - 0, February - 1, etc.
+	var mydate = new Date(parts[2], parts[1] - 1, parts[0]);
+	
+	return mydate;
 }
 function formatDateFromTimeStampToUSA(timeStamp) {
     var finalDate = 'Data non disponibile';
@@ -914,6 +922,7 @@ function openPdfIspezione(idIspezione){;
 					return;
 				}
                 myApp.showPreloader();
+                testPathCustom = testPathCustom || cordova.file.externalApplicationStorageDirectory; //era undefined non so perchè
                 var fileURL = testPathCustom+idIspezione+".pdf";
                 var myBase64 = "";
                 convertFileToDataURLviaFileReader(encodeURI(linkPdf),function(base64Img) {
@@ -1024,13 +1033,12 @@ function populateDipendentiFromPdvCreatePlico(data){
 
 function prepareRicercaPlichi(){
     var idPdv = $$('.puntiVenditaPlicoChiaviSelect').val() ? $$('.puntiVenditaPlicoChiaviSelect').val() : 0;
-    var idDipendente = $$('.dipendentiPlicoSelect').val() ? $$('.dipendentiPlicoSelect').val() : 0;
     var reverse = false;
     var pageSize = 500;
-    var key="validitaA";
+    var key="idPlico";
     
     var objQueryParam = {
-        'firstResult': '0', 'pageSize': pageSize, 'sortKey': key, 'reverse' : reverse, 'selectedPuntoVendita' : idPdv, 'selectedDipendente' : idDipendente
+        'firstResult': '0', 'pageSize': pageSize, 'sortKey': key, 'reverse' : reverse, 'selectedPuntoVendita' : idPdv
     };
     
     getListaPlichi(objQueryParam);
@@ -1039,7 +1047,7 @@ function prepareRicercaPlichi(){
 
 function populateListaPlichi(objPlichi){
     $$('.tbodyListaPlichi').empty();
-   var header =  ['Id plico','Descrizione' ,'Inizio Validità', 'Fine Validità','Dipendente', 'Punto vendita'];
+   var header =  ['Id plico','Descrizione' ,'Punto vendita','Chiavi','Dipendenti'];
    if ($$('.headerTable').length === 0 && objPlichi.length > 0) {
         var headerTr$ = $$('<tr/>');
         for (var i = 0; i < header.length; i++) {
@@ -1055,10 +1063,11 @@ function populateListaPlichi(objPlichi){
         var row$ = $$('<tr/>');
         row$.append($$('<td data-collapsible-title="' + header[0] + '"/>').html('<a href="plicoChiavi/detailPlico.html?idPlico='+ objPlichi[i].idPlico +'" class="idPlicoList button button-fill button-raised yellow">' + objPlichi[i].idPlico + '</a>'));
         row$.append($$('<td data-collapsible-title="' + header[1] + '"/>').html('<a href="#" class="plicoDescrizione">' + objPlichi[i].descrizione + '</a>'));
-        row$.append($$('<td data-collapsible-title="' + header[2] + '"/>').html('<a href="#" class="plicoValiditaDa">' + formatDateFromTimeStampToItalian(objPlichi[i].validitaDa) + '</a>'));
-        row$.append($$('<td data-collapsible-title="' + header[3] + '"/>').html('<a href="#" class="plicoValiditaA">' + formatDateFromTimeStampToItalian(objPlichi[i].validitaA) + '</a>'));
-        row$.append($$('<td data-collapsible-title="' + header[4] + '"/>').html('<a href="#" class="plicoDipendente">' + objPlichi[i].dipendente.cognome + ' '+objPlichi[i].dipendente.nome+'</a>'));
-        row$.append($$('<td data-collapsible-title="' + header[5] + '"/>').html('<a href="#" class="plicoPdv">' + objPlichi[i].puntoVendita.denominazione + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[2] + '"/>').html('<a href="#" class="plicoPdv">' + objPlichi[i].puntoVendita.denominazione + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[3] + '"/>').html('<a href="#" class="plicoChiavi">' + objPlichi[i].chiavi.map(c => c.descrizione).join("<br/>") + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[4] + '"/>').html('<a href="#" class="plicoDipendenti">' + objPlichi[i].currentAssociazioni.map(a => a.dipendente.nome+" "+a.dipendente.cognome).join("<br/>") + '</a>'));
+    
+        
         
         
         $$(".data-table > table > tbody").append(row$);
@@ -1069,12 +1078,9 @@ function populateListaPlichi(objPlichi){
 }
 
 function populateDetailsPlico(objPlico){
-    
     $$(".idPlicoClass").text(objPlico.idPlico);
     $$(".puntoVenditaPlico").text(objPlico.puntoVendita.denominazione);
-    $$(".dipendentiPlicoSpan").text(objPlico.dipendente.cognome + " " + objPlico.dipendente.nome);
-    $$(".datePlicoDa").text(formatDateFromTimeStampToItalian(objPlico.validitaDa));
-    $$(".datePlicoA").text(formatDateFromTimeStampToItalian(objPlico.validitaA));
+    $$(".descrizionePlicoSpan").text(objPlico.descrizione);
     
     
     
@@ -1152,15 +1158,15 @@ function populateDipendentiFromPdvEdit(dipendenti){
 
 
 function preparePlicoSaveModify(){
-    if($$(".dipendentiPlicoSelectEdit").val() === "" && (".chip").length === 0){
-        myApp.alert("Controllare di aver selezionato un dipendete e di aver inserito almeno una chiave nel plico","Errore");
+    if($$(".chip").length === 0){
+        myApp.alert("Controllare di aver inserito almeno una chiave nel plico","Errore");
         return;
     }
-    if(!$$(".datePickerFrom").val() && !$$(".datePickerTo").val()){
-        myApp.alert("Controllare di aver selezionato una data valida","Errore");
+    if(!$$(".descrizionePlicoEdit").val()){
+        myApp.alert("Controllare di aver inserito una descrizione","Errore");
         return;
     }
-    
+
     var chiaviPlicoList = [];
     
     $.each($$(".chipKeyValue"), function (i, d){ 
@@ -1172,30 +1178,24 @@ function preparePlicoSaveModify(){
     var data = {
                 idPlico: parseInt($$(".idPlicoClass").text()),
                 puntoVendita: { idPdv: $(".puntoVenditaPlicoEdit").data().idPuntoVendita },
-                descrizione:  $$(".descrizionePlicoEdit").text(),
-                chiavi: chiaviPlicoList,
-                validitaDa: new Date(formatDateFromItalian($$(".datePickerFrom").val())),
-                validitaA: new Date(formatDateFromItalian($$(".datePickerTo").val())),
-                dipendente: { idDipendente: parseInt($$(".dipendentiPlicoSelectEdit").val()) }
-		};
+                descrizione:  $$(".descrizionePlicoEdit").val(),
+                chiavi: chiaviPlicoList
+        };
+        
     updatePlico(data);
                 
 }
 
 function prepareCreatePlico(){
-     if($$(".dipendentiPlicoSelectEdit").val() === "" && (".chip").length === 0){
-        myApp.alert("Controllare di aver selezionato un dipendete e di aver inserito almeno una chiave nel plico","Errore");
-        return;
-    }
-    if(!$$(".datePickerFrom").val() && !$$(".datePickerTo").val()){
-        myApp.alert("Controllare di aver selezionato una data valida","Errore");
+    if($$(".chip").length === 0){
+        myApp.alert("Controllare di aver inserito almeno una chiave nel plico","Errore");
         return;
     }
     if(!$$(".descrizionePlicoEditCreate").val()){
         myApp.alert("Controllare di aver inserito una descrizione","Errore");
         return;
     }
-        var chiaviPlicoList = [];
+    var chiaviPlicoList = [];
     
     $.each($$(".chipKeyValue"), function (i, d){ 
         chiaviPlicoList.push({ 
@@ -1207,13 +1207,439 @@ function prepareCreatePlico(){
                 
                 puntoVendita: { idPdv: $$(".puntiVenditaPlicoChiaviSelectCreate").val() },
                 descrizione:  $$(".descrizionePlicoEditCreate").val(),
-                chiavi: chiaviPlicoList,
-                validitaDa: new Date(formatDateFromItalian($$(".datePickerFrom").val())),
-                validitaA: new Date(formatDateFromItalian($$(".datePickerTo").val())),
-                dipendente: { idDipendente: parseInt($$(".dipendentiPlicoSelectCreate").val()) }
+                chiavi: chiaviPlicoList
 		};
     
     createPlico(data);
 }
 
+function prepareAlertPdv(){
+    var idPdv = $$('.puntiVenditaPlicoChiaviSelect').val() ? $$('.puntiVenditaPlicoChiaviSelect').val() : 0;
+    
+    getAlertPdv(idPdv);
+}
+function prepareRicercaDipendenti(){
+    var idPdv = $$('.puntiVenditaPlicoChiaviSelect').val() ? $$('.puntiVenditaPlicoChiaviSelect').val() : 0;
+    var reverse = true;
+    var pageSize = 500;
+    var key="idDipendente";
+    
+    var objQueryParam = {
+        'firstResult': '0', 'pageSize': pageSize, 'sortKey': key, 'reverse' : reverse, 'selectedPuntoVendita' : idPdv
+    };
+    
+    getListaDipendenti(objQueryParam);
+}
 
+function showAlertPdv(objAlert, idPdv){
+    $$('.alertPdv').empty();
+    var messages = [];
+    var info = $$("<div class='info'/>")
+    if(!objAlert.verbalePresente || (objAlert.verbalePresente && (objAlert.direttoreToDoAction || objAlert.dipendentiToDoActions.length>0))){
+        info.addClass("info-ko");
+        
+        if(!objAlert.verbalePresente){
+            messages.push("Verbale non presente")
+        }
+        if(objAlert.direttoreToDoAction){
+            messages.push("Il direttore deve firmare&nbsp;&nbsp;<button onclick='signDirettore("+idPdv+")' class='col button button-fill color-yellowCustom'>Firma</button>")
+        }
+        for(var i in objAlert.dipendentiToDoActions){
+            messages.push("Il dipendente "+ objAlert.dipendentiToDoActions[i]+" deve firmare")
+        }
+    }else{
+        info.addClass("info-ok");
+        
+        messages.push("Verbale allineato&nbsp;&nbsp;<a href='#' class='external' onclick='openPdfVerbale("+objAlert.verbale.idVerbale+")'><i class='f7-icons'>document</i></a>")
+    }
+
+    if(messages.length>0){
+        var ul$$ = $$("<ul></ul>");
+        for(var i in messages){
+            ul$$.append($$("<li>"+messages[i]+"</li>"));
+        }
+        info.append(ul$$)
+        $$('.alertPdv').append(info)
+    }
+}
+
+function populateListaDipendenti(objDipendenti){
+    $$('.tbodyListaDipendentiPlico').empty();
+   var header =  ['Id','Cognome','Nome','Punto vendita','Reperibilità','Priorità','Allarme','Sequenza','Ufficio','Plichi','Firma'];
+   if ($$('.headerTable').length === 0 && objDipendenti.length > 0) {
+        var headerTr$ = $$('<tr/>');
+        for (var i = 0; i < header.length; i++) {
+            headerTr$.append($$('<th class="headerTable"/>').html(header[i]));
+        }
+        $$(".data-table > table > thead").append(headerTr$);
+    }
+    if (objDipendenti.length === 0) {
+        $$(".data-table > table > thead").empty();
+        myApp.alert("Nessun dipendente trovato","Dipendenti");
+    }
+    for (var i = 0; i < objDipendenti.length; i++) {
+        var row$ = $$('<tr/>');
+        row$.append($$('<td data-collapsible-title="' + header[0] + '"/>').html('<a href="plicoChiavi/detailDipendentePlico.html?idDipendente='+ objDipendenti[i].idDipendente +'" class="idDipendenteList button button-fill button-raised yellow">' + objDipendenti[i].idDipendente + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[1] + '"/>').html('<a href="#" class="dipendenteCognome">' + objDipendenti[i].cognome + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[2] + '"/>').html('<a href="#" class="dipendenteNome">' + objDipendenti[i].nome + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[3] + '"/>').html('<a href="#" class="dipendentePdv">' + objDipendenti[i].puntoVendita.denominazione + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[4] + '"/>').html('<a href="#" class="dipendenteReperibilita">' + ((objDipendenti[i].currentInfo.flReperibilita) ? '<i class="f7-icons color-green">check</i>' : '<i class="f7-icons color-red">close</i>') + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[5] + '"/>').html('<a href="#" class="dipendentePriorita">' + objDipendenti[i].currentInfo.nuReperibilita + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[6] + '"/>').html('<a href="#" class="dipendenteAllarme">' + ((objDipendenti[i].currentInfo.flAllarme) ? '<i class="f7-icons color-green">check</i>' : '<i class="f7-icons color-red">close</i>') + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[7] + '"/>').html('<a href="#" class="dipendenteSequenza">' + objDipendenti[i].currentInfo.nuSequenza + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[8] + '"/>').html('<a href="#" class="dipendenteUfficio">' + ((objDipendenti[i].currentInfo.flGestioneUfficio) ? '<i class="f7-icons color-green">check</i>' : '<i class="f7-icons color-red">close</i>') + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[9] + '"/>').html('<a href="#" class="dipendentePlichi">' + objDipendenti[i].currentAssociazioni.map(a => a.plico.descrizione).join("<br/>") + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[10] + '"/>').html('<div class="dipendenteFirma">' + ((objDipendenti[i].currentInfo.firma) ? '<i class="f7-icons color-green">check</i>' : '<button onclick="signDipendente('+objDipendenti[i].idDipendente+','+objDipendenti[i].puntoVendita.idPdv+')" class="col button button-fill color-yellowCustom">Firma</button>') + '</div>'));
+    
+        
+        
+        
+        $$(".data-table > table > tbody").append(row$);
+        
+    }
+    
+    
+}
+
+function signDipendente(idDipendente, idPdv){
+    var signaturePad;
+    myApp.modal({
+        title: "Firma",
+        text: "<canvas class='signDipendentePad' style='width:100%'></canvas>",
+        buttons: [
+            {
+                text: "OK",
+                onClick: function(){
+                    prepareSaveSignDipendente(signaturePad.toDataURL(),idDipendente, idPdv)
+                }
+            },
+            {
+                text: "Annulla"
+            }
+        ]
+    })
+
+    signaturePad = new SignaturePad($(".signDipendentePad")[0]);
+}
+
+function signDirettore(idPdv){
+    var signaturePad;
+    myApp.modal({
+        title: "Firma",
+        text: "<canvas class='signDirettorePad' style='width:100%'></canvas>",
+        buttons: [
+            {
+                text: "OK",
+                onClick: function(){
+                    prepareSaveSignDirettore(signaturePad.toDataURL(), idPdv)
+                }
+            },
+            {
+                text: "Annulla"
+            }
+        ]
+    })
+
+    signaturePad = new SignaturePad($(".signDirettorePad")[0]);
+}
+
+function prepareSaveSignDipendente(sign, idDipendente, idPdv){
+    var formData = new FormData();
+    var imgdatafile = dataURItoBlob(sign);
+    var imageName = "FirmaDipendente_"+idDipendente+".png";
+    formData.append("file", imgdatafile, imageName);
+     
+    saveSignDipendente(formData, idDipendente, idPdv);
+}
+
+function prepareSaveSignDirettore(sign, idPdv){
+    var jsonPuntiVendita = JSON.parse(window.sessionStorage.getObj("puntiVendita"));
+    var codicePdv = jsonPuntiVendita.filter(p=>p.idPdv==idPdv)[0].codicePdv
+
+    var formData = new FormData();
+    var imgdatafile = dataURItoBlob(sign);
+    var imageName = "FirmaDirettore_"+idPdv+".png";
+    formData.append("file", imgdatafile, imageName);
+     
+    saveSignDirettore(formData, codicePdv, idPdv);
+}
+
+function prepareRicercaVerbali(){
+    var idPdv = $$('.puntiVenditaPlicoChiaviSelect').val() ? $$('.puntiVenditaPlicoChiaviSelect').val() : 0;
+    var reverse = true;
+    var pageSize = 500;
+    var key="idVerbale";
+    
+    var objQueryParam = {
+        'firstResult': '0', 'pageSize': pageSize, 'sortKey': key, 'reverse' : reverse, 'selectedPuntoVendita' : idPdv
+    };
+    
+    getListaVerbali(objQueryParam);
+}
+
+function populateListaVerbali(objVerbali){
+    $$('.tbodyListaVerbaliPlico').empty();
+   var header =  ['Id','Utente','Punto vendita','Data','Corrente',''];
+   if ($$('.headerTable').length === 0 && objVerbali.length > 0) {
+        var headerTr$ = $$('<tr/>');
+        for (var i = 0; i < header.length; i++) {
+            headerTr$.append($$('<th class="headerTable"/>').html(header[i]));
+        }
+        $$(".data-table > table > thead").append(headerTr$);
+    }
+    if (objVerbali.length === 0) {
+        $$(".data-table > table > thead").empty();
+        myApp.alert("Nessun verbale trovato","Verbali");
+    }
+    for (var i = 0; i < objVerbali.length; i++) {
+        var row$ = $$('<tr/>');
+        row$.append($$('<td data-collapsible-title="' + header[0] + '"/>').html('<a href="#" class="verbaleId">' + objVerbali[i].idVerbale + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[1] + '"/>').html('<a href="#" class="verbaleNome">' + objVerbali[i].utente + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[2] + '"/>').html('<a href="#" class="verbalePdv">' + objVerbali[i].puntoVendita.denominazione + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[3] + '"/>').html('<a href="#" class="verbaleCorrente">' + formatDateFromTimeStampToItalian(objVerbali[i].dtVerbale) + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[4] + '"/>').html('<a href="#" class="verbaleData">' + ((objVerbali[i].flStorico && objVerbali[i].flStorico!=='null' ) ? '<i class="f7-icons color-red">close</i>' : '<i class="f7-icons color-green">check</i>' ) + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + header[5] + '"/>').html('<a href="#" class="verbalePDF external"  onclick="openPdfVerbale('+objVerbali[i].idVerbale+')"><i class="f7-icons">document</i></a>'));
+        
+        
+        $$(".data-table > table > tbody").append(row$);
+        
+    }
+    
+    
+}
+
+function populateDipendenteDetails(objDipendente){
+    $$(".idDipendenteClass").text(objDipendente.idDipendente);
+    $$(".pdvDipendenteClass").text(objDipendente.puntoVendita.denominazione);
+    $$(".cognomeDipendenteClass").text(objDipendente.cognome);
+    $$(".nomeDipendenteClass").text(objDipendente.nome);
+
+    $$(".infoDipendenteReperibilita").prop('checked',objDipendente.currentInfo.flReperibilita ? true :false)
+    $$(".infoDipendentePriorita").val(objDipendente.currentInfo.nuReperibilita)
+    $$(".infoDipendenteAllarme").prop('checked',objDipendente.currentInfo.flAllarme ? true :false)
+    $$(".infoDipendenteSequenza").val(objDipendente.currentInfo.nuSequenza)
+    $$(".infoDipendenteUfficio").prop('checked',objDipendente.currentInfo.flGestioneUfficio ? true :false)
+    
+    if(!$$(".infoDipendenteReperibilita").is(':checked')){
+        $$(".infoDipendentePriorita").val(0)
+        $$(".infoDipendentePriorita").prop("disabled",true)
+    }
+    $$(".infoDipendenteReperibilita").on('change', function (e) {
+        if(this.checked) {
+            $$(".infoDipendentePriorita").prop("disabled",false)
+        }else{
+            $$(".infoDipendentePriorita").val(0)
+            $$(".infoDipendentePriorita").prop("disabled",true)
+        }
+    });
+
+    if(!$$(".infoDipendenteAllarme").is(':checked')){
+        $$(".infoDipendenteSequenza").val(0)
+        $$(".infoDipendenteSequenza").prop("disabled",true)
+    }
+    $$(".infoDipendenteAllarme").on('change', function (e) {
+        if(this.checked) {
+            $$(".infoDipendenteSequenza").prop("disabled",false)
+        }else{
+            $$(".infoDipendenteSequenza").val(0)
+            $$(".infoDipendenteSequenza").prop("disabled",true)
+        }
+    });
+
+
+    var headerPlichi =  ['Plico','Chiavi','Data inizio validità','Data fine validità','Sigillo',''];
+    var headerPlichiTr$ = $$('<tr/>');
+    for (var i = 0; i < headerPlichi.length; i++) {
+        headerPlichiTr$.append($$('<th class="headerTable"/>').html(headerPlichi[i]));
+    }
+    $$(".data-table.tableListaPlichiDipendenteDetails > table > thead").append(headerPlichiTr$);
+    for (var i = 0; i < objDipendente.currentAssociazioni.length; i++) {
+        var row$ = $$('<tr/>');
+        //Per ricercarlo
+        row$.attr("idPlico",objDipendente.currentAssociazioni[i].plico.idPlico)
+        row$.data("idPlico",objDipendente.currentAssociazioni[i].plico.idPlico)
+        row$.data("idAssociazione",objDipendente.currentAssociazioni[i].idAssociazione)
+        row$.data("dtInizioValidita",formatDateFromTimeStampToItalian(objDipendente.currentAssociazioni[i].dtInizioValidita))
+        row$.data("dtFineValidita",formatDateFromTimeStampToItalian(objDipendente.currentAssociazioni[i].dtFineValidita))
+        row$.data("sigillo",objDipendente.currentAssociazioni[i].sigillo)
+        
+        row$.append($$('<td data-collapsible-title="' + headerPlichi[0] + '"/>').html('<a href="#" class="plicoDipendentePlico">' + objDipendente.currentAssociazioni[i].plico.descrizione + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + headerPlichi[1] + '"/>').html('<a href="#" class="plicoDipendenteChiavi">' + objDipendente.currentAssociazioni[i].plico.chiavi.map(c=>c.descrizione).join("<br/>") + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + headerPlichi[2] + '"/>').html('<a href="#" class="plicoDipendenteDataDa">' + formatDateFromTimeStampToItalian(objDipendente.currentAssociazioni[i].dtInizioValidita)+ '</a>'));
+        row$.append($$('<td data-collapsible-title="' + headerPlichi[3] + '"/>').html('<a href="#" class="plicoDipendenteDataA">' + formatDateFromTimeStampToItalian(objDipendente.currentAssociazioni[i].dtFineValidita) + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + headerPlichi[4] + '"/>').html('<a href="#" class="plicoDipendenteSigillo">' + objDipendente.currentAssociazioni[i].sigillo + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + headerPlichi[5] + '"/>').html('<a href="#" onclick="$(this).parents(\'tr\').remove()" class="plicoDipendenteDelete"><i class="f7-icons">trash</i></a>'));
+        
+        
+        $$(".data-table.tableListaPlichiDipendenteDetails > table > tbody").append(row$);
+    }
+}
+function populateDipendentePlichi(objDipendentePlichi){
+    $.each(objDipendentePlichi, function (i, p) {
+        $(".associaPlicoPlico").append($('<option>', { 
+            value: p.idPlico,
+            text : p.descrizione,
+            'data-chiavi': JSON.stringify(p.chiavi)
+        }));
+    });
+}
+
+function associaPlico(){
+    var headerPlichi =  ['Plico','Chiavi','Data inizio validità','Data fine validità','Sigillo',''];
+    
+    var selectedPlico = $(".associaPlicoPlico option:selected");
+
+    if($(".data-table.tableListaPlichiDipendenteDetails").find("[idPlico='"+selectedPlico.val()+"']").length == 0){
+        if(selectedPlico.val()==""){
+            myApp.alert("Selezionare un plico","Associazione plico");
+            return;
+        }
+
+        if($$(".associaPlicoDataDa").val()==""){
+            myApp.alert("Inserire la data di inizio validità","Associazione plico");
+            return;
+        }
+        if($$(".associaPlicoDataA").val()==""){
+            myApp.alert("Inserire la data di fine validità","Associazione plico");
+            return;
+        }
+        if($$(".associaPlicoSigillo").val()==""){
+            myApp.alert("Inserire il sigillo","Associazione plico");
+            return;
+        }
+
+        var row$ = $$('<tr/>');
+        row$.attr("idPlico",selectedPlico.val())
+        row$.data("idPlico",selectedPlico.val())
+        row$.data("dtInizioValidita",$$(".associaPlicoDataDa").val())
+        row$.data("dtFineValidita",$$(".associaPlicoDataA").val())
+        row$.data("sigillo",$$(".associaPlicoSigillo").val())
+
+        row$.append($$('<td data-collapsible-title="' + headerPlichi[0] + '"/>').html('<a href="#" class="plicoDipendentePlico">' + selectedPlico.text() + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + headerPlichi[1] + '"/>').html('<a href="#" class="plicoDipendenteChiavi">' + selectedPlico.data("chiavi").map(c=>c.descrizione).join("<br/>") + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + headerPlichi[2] + '"/>').html('<a href="#" class="plicoDipendenteDataDa">' + $$(".associaPlicoDataDa").val()+ '</a>'));
+        row$.append($$('<td data-collapsible-title="' + headerPlichi[3] + '"/>').html('<a href="#" class="plicoDipendenteDataA">' + $$(".associaPlicoDataA").val() + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + headerPlichi[4] + '"/>').html('<a href="#" class="plicoDipendenteSigillo">' + $$(".associaPlicoSigillo").val() + '</a>'));
+        row$.append($$('<td data-collapsible-title="' + headerPlichi[5] + '"/>').html('<a href="#" onclick="$(this).parents(\'tr\').remove()" class="plicoDipendenteDelete"><i class="f7-icons">trash</i></a>'));
+        
+        
+        $$(".data-table.tableListaPlichiDipendenteDetails > table > tbody").append(row$);
+    }else{
+        myApp.alert("Plico già associato", "Errore");
+    }
+    
+}
+
+function prepareSaveDipendenteDetail(){
+    var origData = JSON.parse(window.sessionStorage.plDipendenteDetails);
+
+    var newAssociazioni = [];
+    $(".data-table.tableListaPlichiDipendenteDetails > table > tbody tr").each(function(i,tr){
+        var newAssociazione = {
+            idAssociazione: $$(tr).data("idAssociazione"),
+            puntoVendita: {
+                idPdv : origData.puntoVendita.idPdv
+            },
+            dipendente: {
+                idDipendente : origData.idDipendente
+            },
+            plico: {
+                idPlico: $$(tr).data("idPlico")
+            },
+            dtInizioValidita: parseDateFromItalian( $$(tr).data("dtInizioValidita")),
+            dtFineValidita: parseDateFromItalian( $$(tr).data("dtFineValidita")),
+            sigillo: $$(tr).data("sigillo")
+        }
+
+        newAssociazioni.push(newAssociazione);
+    });
+
+    data = {
+        idDipendente: origData.idDipendente,
+        puntoVendita: { idPdv: origData.puntoVendita.idPdv },
+        currentInfo: {
+            idInfo: origData.currentInfo.idInfo || 0, 
+            puntoVendita: { idPdv: origData.puntoVendita.idPdv }, 
+            dipendente: {idDipendente: origData.idDipendente},  
+            flGestioneUfficio:  $$(".infoDipendenteUfficio").is(':checked') ? 1 : 0,
+            flReperibilita: $$(".infoDipendenteReperibilita").is(':checked') ? 1 : 0,
+            flAllarme: $$(".infoDipendenteAllarme").is(':checked') ? 1 : 0,
+            nuReperibilita: $$(".infoDipendentePriorita").val(),
+            nuSequenza: $$(".infoDipendenteSequenza").val(),
+            firma: origData.currentInfo.firma,
+            verbale: origData.currentInfo.verbale
+        },
+        currentAssociazioni: newAssociazioni
+    };
+    
+    if (origData.dipendenteAssociatoAVerbale == true) {
+        myApp.confirm('Il dipendente risulta associato ad un verbale. Continuare?','Attenzione', function () {
+            saveDipendenteDetail(data);
+        });
+    } else if (origData.dipendenteAssociatoAFirma == true) {
+        myApp.confirm('Il dipendente risulta associato a firme. Continuare?','Attenzione', function () {
+            saveDipendenteDetail(data);
+        });
+    } else {
+        saveDipendenteDetail(data);
+    }
+    
+}
+
+function openPdfVerbale(idVerbale){
+    var linkPDF = URL_ENDPOINT+"/GabrielliAppV2WS/rest/plichiChiavi/verbale/"+idVerbale;
+     if(linkPDF){
+       if(typeof device !== 'undefined'){
+           
+           if(device.platform !== "Android" ){
+               var ref = cordova.InAppBrowser.open(linkPDF+"?jSessionID="+window.sessionStorage.jsessionid, '_system', 'location=yes');
+
+               }else{
+  
+                    myApp.showPreloader();
+                    testPathCustom = testPathCustom || cordova.file.externalApplicationStorageDirectory; //era undefined non so perchè
+                    var fileURL = testPathCustom+"local.pdf";
+                        
+                    var myBase64 = "";
+                    convertFileToDataURLviaFileReader(encodeURI(linkPDF),function(base64Img) {
+                        myBase64 = base64Img.split(',')[1]; 
+                        
+
+                        // To define the type of the Blob
+                        var contentType = "application/pdf";
+                        // if cordova.file is not available use instead :
+                        // var folderpath = "file:///storage/emulated/0/";
+                        var folderpath = testPathCustom;
+
+                        var filename = "local.pdf";
+
+                        savebase64AsPDF(folderpath,filename,myBase64,contentType);
+                        
+                        setTimeout(function () {
+                            cordova.plugins.fileOpener2.open(
+                                fileURL, 
+                                "application/pdf",
+                                { 
+                                    error : function(e) { 
+                                        myApp.hidePreloader();
+                                        myApp.alert("Errore","Impossibile aprire il pdf");
+                                    },
+                                    success : function(e) { 
+                                        myApp.hidePreloader();
+
+                                    }
+                                }
+                            );
+                        }, 4000);
+
+                    });   
+
+            }
+       }else{
+           window.open(linkPDF+"?jSessionID="+window.sessionStorage.jsessionid, '_system', 'location=yes');
+       }
+     //var ref = window.open(linkPDF, '_system', 'location=yes'); 
+    }else{
+        myApp.alert("Impossibile reperire il Pdf", "Errore");
+    }  
+}

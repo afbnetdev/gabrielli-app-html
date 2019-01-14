@@ -10,10 +10,17 @@ var myApp = new Framework7({
                 || (view.activePage.url == 'privacy.html' && options.isBack == true)){
             myApp.closeModal(".login-screen", false);
             return true;
-        }else if(view.activePage.fromPage.name == 'privacy'){
-            myApp.loginScreen(".login-screen", false);
-            return true;
-        }else if (!window.sessionStorage.jsessionid) {
+        }else if( view.activePage.fromPage != undefined){
+			if(view.activePage.fromPage.name == 'privacy'){
+				myApp.loginScreen(".login-screen", false);
+				return true;
+			}else{
+				if (!window.sessionStorage.jsessionid) {
+					getLogout();
+					return false; //required to prevent default router action
+				}
+			}
+		}else if (!window.sessionStorage.jsessionid) {
             getLogout();
             return false; //required to prevent default router action
         }
@@ -46,6 +53,7 @@ $$.ajaxSetup({headers: {'Access-Control-Allow-Origin': '*'}});
 var mainView = myApp.addView('.view-main', {dynamicNavbar: true, });
 
 $$(document).on('deviceready', function () {
+    //PROBABILMENTE FUNZIONA SOLO SU APP REALE
     pictureSource = navigator.camera.PictureSourceType;
     destinationType = navigator.camera.DestinationType;
     cordova.plugins.certificates.trustUnsecureCerts(true);
@@ -534,36 +542,30 @@ var editIspezione = myApp.onPageInit("editIspezione", function (page) {
 var listaPlichi = myApp.onPageInit("listaPlichi", function (page) {
     
 
-   if(!window.sessionStorage.getObj("puntiVendita")){
-       getPuntiVendita();
-   }  
-   populatePuntiVendita();
-   
-   $$(".puntiVenditaPlicoChiaviSelect").on('change', function (e) {
-       var idPdv = e.currentTarget.value;
-       // se seleziono null non effettuo la chiamata e rendo disabled il bottone di ricerca
-       if(!idPdv){
-            $('.dipendentiPlicoSelect option').remove();
-            $('.dipendentiPlicoSelect').val("");
-            $('.dipendentiPlicoSelect').append($('<option value="">Tutti i dipendenti</option>'));
-            $('.dipendentiPlicoSelect').siblings().find(".item-after").text("Tutti i dipendenti");
-            $('.submitRicercaPlichi').addClass("disabled");
-            $$('.tbodyListaPlichi').empty();
-            return;
-       }
-       $$('.tbodyListaPlichi').empty();
-       myApp.showPreloader();
-       setTimeout(function () { getDipendentiFromPdv(idPdv,"formRicerca");}, 1000);
-   });
-   
-   $$(".submitRicercaPlichi").on('click', function () {
-        myApp.showPreloader();
-        setTimeout(function () { prepareRicercaPlichi();}, 1000);     
-   });
-   
-});
+    if(!window.sessionStorage.getObj("puntiVendita")){
+        getPuntiVendita();
+    }  
+    populatePuntiVendita();
+    
+    $$(".puntiVenditaPlicoChiaviSelect").on('change', function (e) {
+         $$('.tbodyListaPlichi').empty();   
+         var idPdv = e.currentTarget.value;
+        // se seleziono null non effettuo la chiamata e rendo disabled il bottone di ricerca
+        if(!idPdv){
+             $('.submitRicercaPlichi').addClass("disabled");            
+        }else{
+             $('.submitRicercaPlichi').removeClass("disabled");
+        }
+    });
+    
+    $$(".submitRicercaPlichi").on('click', function () {
+         myApp.showPreloader();
+         setTimeout(function () { prepareRicercaPlichi();}, 1000);     
+    });
+    
+ });
 
-var detailPlico = myApp.onPageInit("detailPlico", function (page) {
+ var detailPlico = myApp.onPageInit("detailPlico", function (page) {
     var idPlico = page.query.idPlico;
     myApp.showPreloader();
     getPlicoDetails(idPlico,"detail");
@@ -587,21 +589,6 @@ var detailPlico = myApp.onPageInit("detailPlico", function (page) {
 var editPlico = myApp.onPageInit("editPlico", function (page) {
     var idPlico = page.query.idPlico;
     myApp.showPreloader();
-     var myCalendar1editPlico = myApp.calendar({
-        input: '.datePickerFrom',
-        dateFormat: 'dd/mm/yyyy',
-        closeOnSelect: true,
-        monthNames: months,
-        dayNamesShort: days
-    });
-    var myCalendar2editPlico = myApp.calendar({
-        input: '.datePickerTo',
-        dateFormat: 'dd/mm/yyyy',
-        closeOnSelect: true,
-        monthNames: months,
-        dayNamesShort: days,
-        minDate: new Date()
-    });
     
     getPlicoDetails(idPlico,"edit");
     
@@ -623,55 +610,128 @@ var editPlico = myApp.onPageInit("editPlico", function (page) {
 var createPlico = myApp.onPageInit("createPlico", function (page) {
     
     
-  if(!window.sessionStorage.getObj("puntiVendita")){
-         getPuntiVendita();
-     }  
-     populatePuntiVendita();
-       $$(".puntiVenditaPlicoChiaviSelectCreate").on('change', function (e) {
-       var idPdv = e.currentTarget.value;
-       // se seleziono null non effettuo la chiamata e rendo disabled il bottone di ricerca
-       if(!idPdv){
-            $('.dipendentiPlicoSelectCreate option').remove();
-            $('.dipendentiPlicoSelectCreate').val("");
-            $('.dipendentiPlicoSelectCreate').append($('<option value="">Selez.re un dipendente</option>'));
-            $('.dipendentiPlicoSelectCreate').siblings().find(".item-after").text("Selez.re un dipendente");
-            return;
-       }
- 
-       myApp.showPreloader();
-       setTimeout(function () { getDipendentiFromPdv(idPdv,"createPlico");}, 1000);
-   });
+    if(!window.sessionStorage.getObj("puntiVendita")){
+           getPuntiVendita();
+       }  
+       populatePuntiVendita();
+         $$(".puntiVenditaPlicoChiaviSelectCreate").on('change', function (e) {
+              var idPdv = e.currentTarget.value;
+              // se seleziono null non effettuo la chiamata e rendo disabled il bottone di ricerca
+              if(!idPdv){
+                      $('.createPlicoBtn').addClass("disabled");
+                      return;
+              }else{
+                      $('.createPlicoBtn').removeClass("disabled");
+              }
+          
+              
+     });
+      
+      
+      $$(".createPlicoBtn").on('click', function () {
+          prepareCreatePlico();
+      });
+  
+      $$(".addKeyBtn").on('click', function () {
+         addPlicoKey();  
+      });
+      
+      
+      
+  });
 
-     var myCalendar1createPlico = myApp.calendar({
-        input: '.datePickerFrom',
+  var listaDipendentiPlico = myApp.onPageInit("listaDipendentiPlico", function (page) {
+    var idPdv = page.query.idPdv;
+
+    if(!window.sessionStorage.getObj("puntiVendita")){
+        getPuntiVendita();
+    }  
+    populatePuntiVendita();
+    
+    $$(".puntiVenditaPlicoChiaviSelect").on('change', function (e) {
+         $$('.alertPdv').empty();
+         $$('.tbodyListaDipendentiPlico').empty();   
+         var idPdv = e.currentTarget.value;
+        // se seleziono null non effettuo la chiamata e rendo disabled il bottone di ricerca
+        if(!idPdv){
+             $('.submitRicercaDipendenti').addClass("disabled");            
+        }else{
+             $('.submitRicercaDipendenti').removeClass("disabled");
+        }
+    });
+    
+    $$(".submitRicercaDipendenti").on('click', function () {
+         myApp.showPreloader();
+         setTimeout(function () { prepareAlertPdv();prepareRicercaDipendenti();}, 1000);     
+    });
+
+
+    if(idPdv){
+        $(".puntiVenditaPlicoChiaviSelect").val(idPdv)
+        $(".puntiVenditaPlicoChiaviSelect").parent().find('.item-after').text($(".puntiVenditaPlicoChiaviSelect").find("option:selected").text())
+        $('.submitRicercaDipendenti').removeClass("disabled");
+        
+        myApp.showPreloader();
+        setTimeout(function () { prepareAlertPdv();prepareRicercaDipendenti();}, 1000);     
+    }
+    
+ });
+
+ var detailDipendentePlico = myApp.onPageInit("detailDipendentePlico", function (page) {
+    var idDipendente = page.query.idDipendente;
+    myApp.showPreloader();
+    
+    var myCalendarIspezioni = myApp.calendar({
+        input: '.associaPlicoDataDa',
         dateFormat: 'dd/mm/yyyy',
         closeOnSelect: true,
         monthNames: months,
         dayNamesShort: days
     });
-    var myCalendar2createPlico = myApp.calendar({
-        input: '.datePickerTo',
+    var myCalendar2Ispezioni = myApp.calendar({
+        input: '.associaPlicoDataA',
         dateFormat: 'dd/mm/yyyy',
         closeOnSelect: true,
         monthNames: months,
-        dayNamesShort: days,
-        minDate: new Date()
+        dayNamesShort: days
     });
-    
-    
-    
-    $$(".addKeyBtn").on('click', function () {
-       addPlicoKey();  
-    });
-    
-    
-    $$(".createPlicoBtn").on('click', function () {
-       prepareCreatePlico();  
-    });
-    
-    
-    
-    
-    
-});
 
+    getDipendenteDetails(idDipendente);
+    getDipendentePlichi(idDipendente);
+
+    $$(".associaPlicoBtn").on('click', function () {
+        associaPlico();  
+     });
+
+     $$(".saveDipendenteDetail").on('click', function () {
+        prepareSaveDipendenteDetail();
+     });
+    
+    
+ });
+
+ var listaVerbaliPlico = myApp.onPageInit("listaVerbaliPlico", function (page) {
+    
+
+    if(!window.sessionStorage.getObj("puntiVendita")){
+        getPuntiVendita();
+    }  
+    populatePuntiVendita();
+    
+    $$(".puntiVenditaPlicoChiaviSelect").on('change', function (e) {
+         $$('.tbodyListaVerbaliPlico').empty();   
+         var idPdv = e.currentTarget.value;
+        // se seleziono null non effettuo la chiamata e rendo disabled il bottone di ricerca
+        if(!idPdv){
+             $('.submitRicercaVerbali').addClass("disabled");            
+        }else{
+             $('.submitRicercaVerbali').removeClass("disabled");
+        }
+    });
+    
+    $$(".submitRicercaVerbali").on('click', function () {
+         myApp.showPreloader();
+         setTimeout(function () { prepareRicercaVerbali();}, 1000);     
+    });
+    
+ });

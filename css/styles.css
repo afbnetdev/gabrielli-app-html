@@ -391,3 +391,30 @@ p.nuovaIspezione, p.storicoIspezioni, a.submitRicercaIspezioni{
         padding-bottom: 5px;
     }
 }
+
+.color-red { color: #eb562e }
+.color-green { color:#4caf50 }
+
+.listaPlichiContainer .data-table {
+    width: 100%;
+}
+.alertPdvContainer > div{
+    width: 100%;
+}
+.alertPdv .info{
+    padding: 5px 10px 5px 15px;
+}
+.alertPdv .info-ko{
+    background: #fff0f0;
+    border-left: 3px solid #eb562e;
+}
+.alertPdv .info-ok{
+    background: #f0fff0;
+    border-left: 3px solid #4caf50;
+}
+.listaDipendentiPlicoContainer .data-table {
+    width: 100%;
+}
+.listaVerbaliPlicoContainer .data-table {
+    width: 100%;
+}

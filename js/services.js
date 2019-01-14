@@ -877,7 +877,7 @@ function getListaPlichi(filter){
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichi/getList',
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichiChiavi/getList',
         method: 'GET',
         async: false,
         contentType: 'application/json',
@@ -891,7 +891,7 @@ function getListaPlichi(filter){
             
         },
         error: function (data, status, xhr) {
-            myApp.alert('Errore reperimento dipendenti',"Errore");
+            myApp.alert('Errore reperimento plichi',"Errore");
             myApp.hidePreloader();
         }
     });
@@ -904,7 +904,7 @@ function getPlicoDetails(idPlico,editOrDetails){
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichi/getById/'+idPlico,
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichiChiavi/getById/'+idPlico,
         method: 'GET',
         async: false,
         contentType: 'application/json',
@@ -936,7 +936,7 @@ function deletePlico(idPlico){
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichi/delete/'+idPlico,
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichiChiavi/delete/'+idPlico,
         method: 'GET',
         async: false,
         contentType: 'application/json',
@@ -968,7 +968,7 @@ function updatePlico(plico){
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichi/update',
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichiChiavi/update',
         method: 'POST',
         async: false,      
         contentType: 'application/json',
@@ -999,7 +999,7 @@ function createPlico(plico){
            'Access-Control-Allow-Origin': '*',
            'jSessionID': window.sessionStorage.jsessionid
         },
-        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichi/create',
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichiChiavi/create',
         method: 'POST',
         async: false,      
         contentType: 'application/json',
@@ -1019,6 +1019,242 @@ function createPlico(plico){
         },
         error: function (data, status, xhr) {
             myApp.alert('Errore nella crezione del plico',"Errore");
+            myApp.hidePreloader();
+        }
+    });
+}
+
+function getAlertPdv(idPdv){
+    $$.ajax({
+   headers: {
+      'Authorization': 'Bearer 102-token',
+      'Access-Control-Allow-Origin': '*',
+      'jSessionID': window.sessionStorage.jsessionid
+   },
+   url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichiChiavi/getAlert/'+idPdv,
+   method: 'GET',
+   async: false,
+   contentType: 'application/json',
+   crossDomain: true,
+   success: function (data) {
+       var objAlert = JSON.parse(data).resultData;
+       showAlertPdv(objAlert, idPdv);
+       myApp.hidePreloader();
+       
+       
+   },
+   error: function (data, status, xhr) {
+       myApp.alert('Errore reperimento dipendenti',"Errore");
+       myApp.hidePreloader();
+   }
+});
+}
+function getListaDipendenti(filter){
+    $$.ajax({
+   headers: {
+      'Authorization': 'Bearer 102-token',
+      'Access-Control-Allow-Origin': '*',
+      'jSessionID': window.sessionStorage.jsessionid
+   },
+   url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichiChiavi/getDipendentiList',
+   method: 'GET',
+   async: false,
+   contentType: 'application/json',
+   crossDomain: true,
+   data: filter,
+   success: function (data) {
+       var objDipendenti = JSON.parse(data).resultData;
+       populateListaDipendenti(objDipendenti);
+       myApp.hidePreloader();
+       
+       
+   },
+   error: function (data, status, xhr) {
+       myApp.alert('Errore reperimento dipendenti',"Errore");
+       myApp.hidePreloader();
+   }
+});
+}
+
+function saveSignDipendente(formData, idDipendente, idPdv){
+      
+    $$.ajax({
+      headers: {
+         'Authorization': 'Bearer 102-token',
+         'Access-Control-Allow-Origin': '*',
+         'idDipendente': parseInt(idDipendente),
+         'jSessionID': window.sessionStorage.jsessionid
+        
+      },
+      url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichiChiavi/sendDipendenteSignature',
+      method: 'POST',
+      data: formData,
+      async: false,
+      contentType: false,
+      crossDomain: true,
+      cache: false,
+      processData: false,
+      success: function (data) {
+        myApp.hidePreloader();
+        myApp.alert("Firma dipendente caricata correttamente","Firma dipendente",function(){
+            mainView.router.loadPage({
+                force : true,
+                ignoreCache : true,
+                reload: true, //sono nella stessa pagina, senno non fa nulla
+                url :"plicoChiavi/listaDipendentiPlico.html?idPdv="+idPdv
+            });
+        });
+      },
+      error: function (data, status, xhr) {
+          myApp.hidePreloader();
+          myApp.alert("Errore nel caricamento della firma del dipendente","Errore");
+      }
+  });
+}
+
+function saveSignDirettore(formData, codicePdv, idPdv){
+      
+    $$.ajax({
+      headers: {
+         'Authorization': 'Bearer 102-token',
+         'Access-Control-Allow-Origin': '*',
+         'codicePdv': codicePdv,
+         'userName': window.sessionStorage.username,
+         'jSessionID': window.sessionStorage.jsessionid
+        
+      },
+      url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichiChiavi/sendDirettoreSignature',
+      method: 'POST',
+      data: formData,
+      async: false,
+      contentType: false,
+      crossDomain: true,
+      cache: false,
+      processData: false,
+      success: function (data) {
+        myApp.hidePreloader();
+        myApp.alert("Firma direttore caricata correttamente","Firma direttore",function(){
+            mainView.router.loadPage({
+                force : true,
+                ignoreCache : true,
+                reload: true, //sono nella stessa pagina, senno non fa nulla
+                url :"plicoChiavi/listaDipendentiPlico.html?idPdv="+idPdv
+            });
+        });
+      },
+      error: function (data, status, xhr) {
+          myApp.hidePreloader();
+          myApp.alert("Errore nel caricamento della firma del direttore","Errore");
+      }
+  });
+}
+
+
+function getDipendenteDetails(idDipendente){
+    
+         $$.ajax({
+        headers: {
+           'Authorization': 'Bearer 102-token',
+           'Access-Control-Allow-Origin': '*',
+           'jSessionID': window.sessionStorage.jsessionid
+        },
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichiChiavi/getInfoById/'+idDipendente,
+        method: 'GET',
+        async: false,
+        contentType: 'application/json',
+        crossDomain: true,
+        success: function (data) {
+            var objDipendente = JSON.parse(data).resultData;
+            window.sessionStorage.plDipendenteDetails=JSON.stringify(objDipendente);
+            populateDipendenteDetails(objDipendente);
+            myApp.hidePreloader();
+            
+        },
+        error: function (data, status, xhr) {
+            myApp.alert('Errore reperimento dipendente',"Errore");
+            myApp.hidePreloader();
+        }
+    });
+}
+
+function getDipendentePlichi(idDipendente){
+    
+    $$.ajax({
+   headers: {
+      'Authorization': 'Bearer 102-token',
+      'Access-Control-Allow-Origin': '*',
+      'jSessionID': window.sessionStorage.jsessionid
+   },
+   url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichiChiavi/listPlichiToJoin/'+idDipendente,
+   method: 'GET',
+   async: false,
+   contentType: 'application/json',
+   crossDomain: true,
+   success: function (data) {
+       var objDipendentePlichi = JSON.parse(data).resultData;
+       populateDipendentePlichi(objDipendentePlichi);
+       myApp.hidePreloader();
+       
+   },
+   error: function (data, status, xhr) {
+       myApp.alert('Errore reperimento plichi',"Errore");
+       myApp.hidePreloader();
+   }
+});
+}
+
+function getListaVerbali(filter){
+    $$.ajax({
+   headers: {
+      'Authorization': 'Bearer 102-token',
+      'Access-Control-Allow-Origin': '*',
+      'jSessionID': window.sessionStorage.jsessionid
+   },
+   url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichiChiavi/verbali',
+   method: 'GET',
+   async: false,
+   contentType: 'application/json',
+   crossDomain: true,
+   data: filter,
+   success: function (data) {
+       var objVerbali = JSON.parse(data).resultData;
+       populateListaVerbali(objVerbali);
+       myApp.hidePreloader();
+       
+       
+   },
+   error: function (data, status, xhr) {
+       myApp.alert('Errore reperimento dipendenti',"Errore");
+       myApp.hidePreloader();
+   }
+});
+}
+
+function saveDipendenteDetail(dipendenteDetail){
+    $$.ajax({
+        headers: {
+           'Authorization': 'Bearer 102-token',
+           'Access-Control-Allow-Origin': '*',
+           'jSessionID': window.sessionStorage.jsessionid
+        },
+        url :URL_ENDPOINT+'/GabrielliAppV2WS/rest/plichiChiavi/updateDipendente',
+        method: 'POST',
+        async: false,      
+        contentType: 'application/json',
+        crossDomain: true,       
+        data:JSON.stringify(dipendenteDetail),
+        success: function (data) {
+            myApp.hidePreloader();
+            myApp.alert("Dipendente salvato correttamente","Dettaglio dipendente", function(){
+                mainView.router.loadPage({
+                    force : true,
+                    ignoreCache : true,
+                    url :"plicoChiavi/listaDipendentiPlico.html?idPdv="+dipendenteDetail.puntoVendita.idPdv
+                });
+            });  
+        },
+        error: function (data, status, xhr) {
+            myApp.alert('Errore nel salvataggio del dipendente',"Errore");
             myApp.hidePreloader();
         }
     });
